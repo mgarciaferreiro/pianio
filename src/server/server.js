@@ -34,16 +34,13 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.CREATE_GAME, createGame);
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
   socket.on(Constants.MSG_TYPES.INPUT, handleInput);
+  socket.on(Constants.MSG_TYPES.START_GAME, startGame)
   socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame)
-  socket.on('disconnect', onDisconnect);
+  socket.on(Constants.MSG_TYPES.DISCONNECT, onDisconnect);
 });
 
 // maps gameId to game objects
-const games = {} 
-
-function restartGame(gameId) {
-
-}
+const games = {}
 
 /**
  * client passes in hostName
@@ -80,7 +77,15 @@ function joinGame(username, gameId) {
 }
 
 function startGame(gameId) {
-  
+  this.to(gameId).emit(Constants.MSG_TYPES.START_GAME);
+  const game = games[gameId];
+  game.start();
+}
+
+function restartGame(gameId) {
+  this.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME);
+  const game = games[gameId];
+  game.start();
 }
 
 function handleInput(username, tileClicked) {

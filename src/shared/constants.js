@@ -12,7 +12,9 @@ module.exports = Object.freeze({
       GAME_WON: 'won',
       CREATE_GAME_REQUEST: 'create_game',
       CREATE_GAME_SUCCESS: 'create_game_success',
+      START_GAME: 'start_game',
       RESTART_GAME: 'restart_game',
-      PLAYER_JOINED_SESSION: 'player_joined_session'
+      PLAYER_JOINED_SESSION: 'player_joined_session',
+      DISCONNECT: 'disconnect'
     },
 });
