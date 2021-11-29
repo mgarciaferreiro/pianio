@@ -31,20 +31,60 @@ const io = socketio(server);
 io.on('connection', socket => {
   console.log('Player connected!', socket.id);
 
-  socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
+  socket.on(Constants.MSG_TYPES.CREATE_GAME, createGame);
+  socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
   socket.on(Constants.MSG_TYPES.INPUT, handleInput);
+  socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame)
   socket.on('disconnect', onDisconnect);
 });
 
-// Setup the Game
-const game = new Game();
+// maps gameId to game objects
+const games = {} 
 
-function joinGame(username) {
-  game.addPlayer(this, username);
+function restartGame(gameId) {
+
 }
 
-function handleInput(tileClicked) {
-  game.handleTileClicked(this, tileClicked);
+/**
+ * client passes in hostName
+ */
+
+function createGame(hostName) {
+  const gameId = (Math.floor(Math.random() * 100000 + 1));
+  
+  while (gameId.toString() in sessionIdToGame) {
+    gameId++;
+  }
+
+  const gameId = gameId.toString();
+  const game = new Game(hostName);
+  game.addPlayer(hostName)
+
+  games[gameId] = game;
+  this.join(gameId);
+
+  this.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS); //emit to client
+}
+
+function joinGame(username, gameId) {
+  if (!(gameId in games)) {
+    this.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
+  } else {
+    game = games[gameId];
+    game.addPlayer(username);
+    this.join(gameId);
+    this.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION); //emit to client
+
+    this.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS); //emit to client
+  }
+}
+
+function startGame(gameId) {
+  
+}
+
+function handleInput(username, tileClicked) {
+  game.handleTileClicked(username, tileClicked);
 }
 
 function onDisconnect() {

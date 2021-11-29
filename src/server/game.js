@@ -2,12 +2,13 @@ const Constants = require('../shared/constants');
 const Player = require('./player');
 
 class Game {
-  constructor() {
-    this.sockets = {};
-    this.players = {};
+  constructor(host) {
+    this.sockets = {}; //maps socket id to socket
+    this.players = {}; //maps socket id to player object
+    this.host = host
 
     // Generate a random song with 5 notes
-    this.song = Array.from({length: Constants.SONG_LENGTH}, () => Math.floor(Math.random() * 5));
+    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
