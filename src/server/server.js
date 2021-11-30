@@ -31,16 +31,17 @@ const io = socketio(server);
 io.on('connection', socket => {
   console.log('Player connected!', socket.id);
 
-  socket.on(Constants.MSG_TYPES.CREATE_GAME, createGame);
+  socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, createGame);
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
   socket.on(Constants.MSG_TYPES.INPUT, handleInput);
-  socket.on(Constants.MSG_TYPES.START_GAME, startGame)
-  socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame)
+  socket.on(Constants.MSG_TYPES.START_GAME, startGame);
+  socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
+  socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
   socket.on(Constants.MSG_TYPES.DISCONNECT, onDisconnect);
 });
 
-// maps gameId to game objects
-const games = {}
+const games = {} // maps gameId to game objects
+
 
 /**
  * client passes in hostName
@@ -49,7 +50,7 @@ const games = {}
 function createGame(hostName) {
   const gameId = (Math.floor(Math.random() * 100000 + 1));
   
-  while (gameId.toString() in sessionIdToGame) {
+  while (gameId.toString() in games) {
     gameId++;
   }
 
@@ -86,6 +87,14 @@ function restartGame(gameId) {
   this.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME);
   const game = games[gameId];
   game.start();
+}
+
+function getOverallLeaderboard(gameId) {
+  const game = games[gameId];
+  game.updateOverallLeaderboard();
+  this.to(gameId).emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
+  this.emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
+
 }
 
 function handleInput(username, tileClicked) {

@@ -15,6 +15,8 @@ module.exports = Object.freeze({
       START_GAME: 'start_game',
       RESTART_GAME: 'restart_game',
       PLAYER_JOINED_SESSION: 'player_joined_session',
-      DISCONNECT: 'disconnect'
+      DISCONNECT: 'disconnect',
+      GET_OVERALL_LEADERBOARD: 'get_overall_leaderboard',
+      FINISH_GAME: 'finish_game'
     },
 });

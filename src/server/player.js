@@ -4,10 +4,8 @@ class Player {
     constructor(id, username) {
       this.id = id;
       this.username = username;
-      this.position = 0;
-      this.score = 0;
-      this.hasLost = false;
-      this.hasWon = false;
+      this.position = 0; // -1 position means lost from misclick
+      this.isFinished = false;
     }
 
     setPosition(position) {
@@ -15,15 +13,18 @@ class Player {
     }
 
     handleTileClicked(tileClicked, correctTile) {
+      if (!this.isFinished) {
         if (tileClicked == correctTile) {
-            this.position += 1;
-            this.score += 1;
-            if (this.position == Constants.SONG_LENGTH) {
-                this.hasWon = true;
-            }
+          this.position += 1;
+          this.score += 1;
+          if (this.position == Constants.SONG_LENGTH - 1) {
+              this.isFinished = true;
+          }
         } else {
-            this.hasLost = true;
+            this.position = -1;
+            this.isFinished = true;
         }
+      }
     }
 
     serializeForUpdate() {
