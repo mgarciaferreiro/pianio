@@ -1,0 +1,199 @@
+.App {
+  text-align: center;
+  /* background-color: #1F1F1F; */
+
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+  background-color: #1F1F1F;
+
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #1F1F1F;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.title {
+  color: #CFB53B;
+  margin-top:10%;
+  font-size: 60px;
+  font-style: normal;
+  /* font-weight: bold; */
+  font-size: 100px;
+  line-height: 161px;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.blurb {
+  color: #A1A1A1;
+  font-family: Arial;
+  margin-top: -120px;
+}
+
+
+.addName {
+  margin-top: 50px;
+  background: #C7C7C7;
+  box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.41);
+  border-radius: 3px;
+  height:30px;
+  padding:5px;
+  padding-left: 10px;
+}
+
+.addName:focus {
+  outline: none;
+}
+
+.play {
+  background: rgba(156, 133, 25, 0.81);
+  height:42px;
+  margin-left:5px;
+  width:70px;
+  border-radius: 3px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+}
+.startGame {
+  margin: 0 auto;
+  display: block;
+  background: rgba(156, 133, 25, 0.81);
+  height:35px;
+  width:120px;
+  box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.41);
+  border-radius: 3px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+}
+
+.startGame:hover {
+  filter: brightness(90%);
+  transition: .5s;
+}
+
+.play:hover {
+  filter: brightness(90%);
+  transition: .5s;
+}
+.join {
+  background: rgba(156, 133, 25, 0.81);
+  height:42px;
+  margin-left:10px;
+  margin-right:10px;
+  width:140px;
+  /* box-shadow: 0px 0px 20px 6px rgba(90, 85, 85, 0.41); */
+  border-radius: 3px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+  margin-top:50px
+}
+
+.join:hover {
+  filter: brightness(90%);
+  transition: .5s;
+}
+
+.error {
+  color:red
+}
+
+.createRoom {
+  margin-top: 90px;
+  border: 1px solid black;
+  color: white;
+  /* background-color:white; */
+}
+
+.numPlayerBtn {
+  background: rgba(156, 133, 25, 0.81);
+  width:30px;
+
+  color: white;
+  border: none;
+  margin:2px;
+  /* background-color: red; */
+}
+.numPlayerBtn:hover {
+  filter: brightness(90%);
+  transition: .5s;
+}
+
+.waitingGif {
+  width:50%;
+  margin-left:25%;
+  border-radius: 40px;
+  /* margin-top:10%; */
+}
+
+.playerCount {
+    color: #CFB53B;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: lighter;
+    /* line-height: 161px; */
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+.player1 {
+  margin-top: 1%;
+  margin-left: 10%;
+  /* margin-right: 5%; */
+  width: 40%;
+  flex: 1;
+
+}
+
+.player2 {
+  margin-top: 1%;
+  /* margin-left: 5%; */
+  margin-right: 10%;
+  width: 40%;
+  flex: 1;
+}
+
+.flex-container {
+  display: flex;
+}
