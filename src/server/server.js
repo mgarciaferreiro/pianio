@@ -19,8 +19,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static('dist'));
 }
 
-// Listen on port 3000
-const port = process.env.PORT || 3000;
+// Listen on port 3001
+const port = process.env.PORT || 3001;
 const server = app.listen(port);
 console.log(`Server listening on port ${port}`);
 
@@ -32,7 +32,6 @@ io.on('connection', socket => {
   console.log('Player connected!', socket.id);
 
   socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
-  socket.on(Constants.MSG_TYPES.INPUT, handleInput);
   socket.on('disconnect', onDisconnect);
 });
 
@@ -41,10 +40,6 @@ const game = new Game();
 
 function joinGame(username) {
   game.addPlayer(this, username);
-}
-
-function handleInput(tileClicked) {
-  game.handleTileClicked(this, tileClicked);
 }
 
 function onDisconnect() {

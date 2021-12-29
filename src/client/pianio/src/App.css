@@ -197,3 +197,37 @@
 .flex-container {
   display: flex;
 }
+
+.piano {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column-reverse;
+  height: 100%;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100px;
+  height: 150px;
+  border: 0.5px solid #CECECE;
+  color: #CECECE;
+  font-size: 20px;
+  padding: 10px
+}
+
+.tile-white {
+  background-color: #FFFFFF;
+}
+
+.tile-black {
+  background-color: #1F1F1F;
+}

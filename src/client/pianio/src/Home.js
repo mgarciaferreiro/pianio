@@ -4,6 +4,7 @@ import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+
 function Home() {
   const [name, setName] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)

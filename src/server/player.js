@@ -10,17 +10,6 @@ class Player {
       this.hasWon = false;
     }
 
-    handleTileClicked(tileClicked, correctTile) {
-        if (tileClicked == correctTile) {
-            this.position += 1;
-            if (this.position == Constants.SONG_LENGTH) {
-                this.hasWon = true;
-            }
-        } else {
-            this.hasLost = true;
-        }
-    }
-
     serializeForUpdate() {
       return {
         id: this.id,
