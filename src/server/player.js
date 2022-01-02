@@ -12,21 +12,6 @@ class Player {
       this.position = position
     }
 
-    handleTileClicked(tileClicked, correctTile) {
-      if (!this.isFinished) {
-        if (tileClicked == correctTile) {
-          this.position += 1;
-          this.score += 1;
-          if (this.position == Constants.SONG_LENGTH - 1) {
-              this.isFinished = true;
-          }
-        } else {
-            this.position = -1;
-            this.isFinished = true;
-        }
-      }
-    }
-
     serializeForUpdate() {
       return {
         id: this.id,

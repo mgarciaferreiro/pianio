@@ -19,8 +19,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static('dist'));
 }
 
-// Listen on port 3000
-const port = process.env.PORT || 3000;
+// Listen on port 3001
+const port = process.env.PORT || 3001;
 const server = app.listen(port);
 console.log(`Server listening on port ${port}`);
 
@@ -33,7 +33,6 @@ io.on('connection', socket => {
 
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, createGame);
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
-  socket.on(Constants.MSG_TYPES.INPUT, handleInput);
   socket.on(Constants.MSG_TYPES.START_GAME, startGame);
   socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
   socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
@@ -95,10 +94,6 @@ function getOverallLeaderboard(gameId) {
   this.to(gameId).emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
   this.emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
 
-}
-
-function handleInput(username, tileClicked) {
-  game.handleTileClicked(username, tileClicked);
 }
 
 function onDisconnect() {
