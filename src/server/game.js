@@ -23,17 +23,6 @@ class Game {
     delete this.players[socket.id];
   }
 
-  handleTileClicked(socket, tileClicked) {
-    const player = this.players[socket.id]
-    if (player) {
-      const correctTile = this.song[player.position]
-      this.players[socket.id].handleTileClicked(tileClicked, correctTile);
-
-      // Send an update every time a tile is clicked
-      this.shouldSendUpdate = true;
-    }
-  }
-
   update() {
     // Calculate time elapsed
     const now = Date.now();

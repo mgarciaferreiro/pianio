@@ -6,6 +6,7 @@ import waitingGif from './waiting.gif'
 import waitingGif2 from './waiting2.gif'
 import waitingGif3 from './waiting3.gif'
 import waitingGif4 from './waiting4.gif'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Lobby() {
   const [playerCount, setPlayerCount] = useState(1)
@@ -60,7 +61,9 @@ function Lobby() {
                   <h3 className = 'playerCount' style={{ fontFamily: 'Abril Fatface' }}>Marta</h3>
                 </div>
           </div> */}
-      <button className="startGame">Start Game</button>
+      <Link to="/game">
+        <button className="startGame">Start Game</button>
+      </Link>
     </div>
   )
 }

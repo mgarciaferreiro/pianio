@@ -1,6 +1,7 @@
 import './App.css'
 import Lobby from './Lobby'
 import Home from './Home'
+import Game from './Game'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/lobby" element={<Lobby />} />
+        <Route path="/game" element={<Game />} />
       </Routes>
     </div>
   )
