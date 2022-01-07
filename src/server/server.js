@@ -31,15 +31,69 @@ const io = socketio(server);
 io.on('connection', socket => {
   console.log('Player connected!', socket.id);
 
-  socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
-  socket.on('disconnect', onDisconnect);
+  socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, createGame);
+  socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
+  socket.on(Constants.MSG_TYPES.START_GAME, startGame);
+  socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
+  socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
+  socket.on(Constants.MSG_TYPES.DISCONNECT, onDisconnect);
 });
 
-// Setup the Game
-const game = new Game();
+const games = {} // maps gameId to game objects
 
-function joinGame(username) {
-  game.addPlayer(this, username);
+
+/**
+ * client passes in hostName
+ */
+
+function createGame(hostName) {
+  const gameId = (Math.floor(Math.random() * 100000 + 1));
+  
+  while (gameId.toString() in games) {
+    gameId++;
+  }
+
+  const gameId = gameId.toString();
+  const game = new Game(hostName);
+  game.addPlayer(hostName)
+
+  games[gameId] = game;
+  this.join(gameId);
+
+  this.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS); //emit to client
+}
+
+function joinGame(username, gameId) {
+  if (!(gameId in games)) {
+    this.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
+  } else {
+    game = games[gameId];
+    game.addPlayer(username);
+    this.join(gameId);
+    this.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION); //emit to client
+
+    this.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS); //emit to client
+  }
+}
+
+function startGame(gameId) {
+  this.to(gameId).emit(Constants.MSG_TYPES.START_GAME);
+  const game = games[gameId];
+  game.start();
+}
+
+function restartGame(gameId) {
+  this.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME);
+  const game = games[gameId];
+  game.start();
+}
+
+function getOverallLeaderboard(gameId) {
+  const game = games[gameId];
+  game.updateOverallLeaderboard();
+  this.to(gameId).emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
+  this.emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
+
 }
 
 function onDisconnect() {

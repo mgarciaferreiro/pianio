@@ -4,10 +4,12 @@ class Player {
     constructor(id, username) {
       this.id = id;
       this.username = username;
-      this.position = 0;
-      this.score = 0;
-      this.hasLost = false;
-      this.hasWon = false;
+      this.position = 0; // -1 position means lost from misclick
+      this.isFinished = false;
+    }
+
+    setPosition(position) {
+      this.position = position
     }
 
     serializeForUpdate() {
