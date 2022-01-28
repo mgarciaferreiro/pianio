@@ -1,5 +1,4 @@
 import './App.css'
-import WebFont from 'webfontloader'
 import React, { useState, useEffect } from 'react'
 
 // TODO: get song from server, get number of keys based on difficulty
@@ -27,6 +26,20 @@ function Game() {
     const [hasWon, setHasWon] = useState(false)
     const [hasLost, setHasLost] = useState(false)
     const [board, setBoard] = useState(getBoardAtPosition(0))
+    const [seconds, setSeconds] = useState(0);
+    const [isActive, setIsActive] = useState(true);
+
+    useEffect(() => {
+      let interval = null;
+      if (isActive) {
+        interval = setInterval(() => {
+          setSeconds(seconds => seconds + 1);
+        }, 100);
+      } else if (!isActive && seconds !== 0) {
+        clearInterval(interval);
+      }
+      return () => clearInterval(interval);
+    }, [isActive, seconds]);
 
     const handleKeyPress = (event) => {
         console.log(event.key)
@@ -37,6 +50,7 @@ function Game() {
         if (tilePressed === correctTile) {
             if (position === song.length) {
                 setHasWon(true)
+                setIsActive(false)
             } else {
                 setBoard(getBoardAtPosition(position + 1))
             }
@@ -56,7 +70,7 @@ function Game() {
     return (
       <div className="flex-container">
       <div className="piano">
-        <p className="timer">3.724s</p>
+      <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
         {board.map((row, i) => (
           <div key={i} className="row">
             { row.map((col, j) => (
@@ -67,7 +81,6 @@ function Game() {
             ))}
           </div>
         ))}
-        <p className="timer">3.724s</p>
       </div>
       <div className="progress-board">
         {songArray.map((row, i) => (
