@@ -1,11 +1,17 @@
 import './App.css'
-import WebFont from 'webfontloader'
 import React, { useState, useEffect } from 'react'
 
 // TODO: get song from server, get number of keys based on difficulty
 const numKeys = 6
+const songLength = 40
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
 const song = Array.from({length: 40}, () => Math.floor(Math.random() * numKeys));
+const songArray = Array(songLength).fill().map(() => Array(numKeys).fill(0));
+for (let i = 0; i < songLength; i++) {
+  let blackTileIndex = song[i]
+  songArray[i][blackTileIndex] = 1
+}
+
 const getBoardAtPosition = (pos) => {
     const newBoard = Array(3).fill().map(() => Array(numKeys).fill(0));
     for (let i = 0; i < 3; i++) {
@@ -20,6 +26,20 @@ function Game() {
     const [hasWon, setHasWon] = useState(false)
     const [hasLost, setHasLost] = useState(false)
     const [board, setBoard] = useState(getBoardAtPosition(0))
+    const [seconds, setSeconds] = useState(0);
+    const [isActive, setIsActive] = useState(true);
+
+    useEffect(() => {
+      let interval = null;
+      if (isActive) {
+        interval = setInterval(() => {
+          setSeconds(seconds => seconds + 1);
+        }, 100);
+      } else if (!isActive && seconds !== 0) {
+        clearInterval(interval);
+      }
+      return () => clearInterval(interval);
+    }, [isActive, seconds]);
 
     const handleKeyPress = (event) => {
         console.log(event.key)
@@ -30,6 +50,7 @@ function Game() {
         if (tilePressed === correctTile) {
             if (position === song.length) {
                 setHasWon(true)
+                setIsActive(false)
             } else {
                 setBoard(getBoardAtPosition(position + 1))
             }
@@ -40,11 +61,16 @@ function Game() {
     }
 
     useEffect(() => {
-        document.addEventListener("keydown", handleKeyPress, false)
-    })
+        document.addEventListener("keydown", handleKeyPress)
+        return () => {
+          document.removeEventListener("keydown", handleKeyPress)
+        }
+    }, [handleKeyPress])
   
     return (
+      <div className="flex-container">
       <div className="piano">
+      <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
         {board.map((row, i) => (
           <div key={i} className="row">
             { row.map((col, j) => (
@@ -55,6 +81,19 @@ function Game() {
             ))}
           </div>
         ))}
+      </div>
+      <div className="progress-board">
+        {songArray.map((row, i) => (
+          <div key={i} className="row">
+            { row.map((col, j) => (
+              <div key={j}
+              className={position === i ? "tile-small tile-red" : 
+              (col ? "tile-small tile-black" : "tile-small tile-white") }>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
       </div>
     )
   }

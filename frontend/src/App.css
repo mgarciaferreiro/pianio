@@ -183,7 +183,6 @@
   /* margin-right: 5%; */
   width: 40%;
   flex: 1;
-
 }
 
 .player2 {
@@ -199,11 +198,13 @@
 }
 
 .piano {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: -200px;
   flex-direction: column-reverse;
-  height: 100%;
+  height: 100vh;
   width: 100%;
 }
 
@@ -216,8 +217,8 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  width: 100px;
-  height: 150px;
+  height: 30vh;
+  min-width: 100px;
   border: 0.5px solid #CECECE;
   color: #CECECE;
   font-size: 20px;
@@ -230,4 +231,34 @@
 
 .tile-black {
   background-color: #1F1F1F;
+}
+
+.tile-red {
+  background-color: rgb(199, 71, 71);
+}
+
+.timer {
+  position: absolute;
+  color: #CFB53B;
+  font-family: Arial;
+  font-weight: bold;
+  font-size: 60px;
+  top: -30px;
+}
+
+.progress-board {
+  display: flex;
+  justify-content: center;
+  margin-left: 0px;
+  align-items: center;
+  flex-direction: column-reverse;
+  height: 100vh;
+  width: 10%;
+}
+
+.tile-small {
+  display: flex;
+  height: 12px;
+  width: 10px;
+  border: 0.5px solid #CECECE;
 }
