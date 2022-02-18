@@ -2,7 +2,7 @@ const express = require('express');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const socketio = require('socket.io');
-const Constants = require('../shared/constants');
+const Constants = require('../../../frontend/src/shared/constants');
 const webpackConfig = require('../../webpack.dev.js');
 const Game = require('./game');
 
@@ -30,6 +30,7 @@ const io = socketio(server);
 // Listen for socket.io connections
 io.on('connection', socket => {
   console.log('Player connected!', socket.id);
+  socket.emit('connect', null);
 
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, createGame);
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
@@ -47,6 +48,7 @@ const games = {} // maps gameId to game objects
  */
 
 function createGame(hostName) {
+  console.log('Creating game ' + hostName)
   const gameId = (Math.floor(Math.random() * 100000 + 1));
   
   while (gameId.toString() in games) {
@@ -60,7 +62,7 @@ function createGame(hostName) {
   games[gameId] = game;
   this.join(gameId);
 
-  this.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS); //emit to client
+  this.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, gameId); //emit to client
 }
 
 function joinGame(username, gameId) {
@@ -97,5 +99,6 @@ function getOverallLeaderboard(gameId) {
 }
 
 function onDisconnect() {
-  game.removePlayer(this);
+  console.log("Disconnected")
+  // game.removePlayer(this);
 }
