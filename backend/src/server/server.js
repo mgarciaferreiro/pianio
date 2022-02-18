@@ -53,7 +53,7 @@ function createGame(hostName) {
     gameId++;
   }
 
-  const gameId = gameId.toString();
+  gameId = gameId.toString();
   const game = new Game(hostName);
   game.addPlayer(hostName)
 
