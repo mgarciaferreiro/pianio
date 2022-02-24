@@ -48,6 +48,7 @@ function Game() {
 
         const correctTile = song[position]
         if (tilePressed === correctTile) {
+          playNote()
             if (position === song.length) {
                 setHasWon(true)
                 setIsActive(false)
@@ -60,6 +61,21 @@ function Game() {
         }
     }
 
+    // plays a random key
+    function playNote() {
+      const notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+      const randomNote = notes[Math.floor(Math.random() * notes.length)]
+      const noteAudio = document.getElementById(randomNote)
+      noteAudio.currentTime = 0
+      noteAudio.play()
+        .then(() => {
+          // audio is playing
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+    
     useEffect(() => {
         document.addEventListener("keydown", handleKeyPress)
         return () => {
@@ -69,31 +85,43 @@ function Game() {
   
     return (
       <div className="flex-container">
-      <div className="piano">
-      <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
-        {board.map((row, i) => (
-          <div key={i} className="row">
-            { row.map((col, j) => (
-              <div key={j}
-              className={col ? "tile tile-black" : "tile tile-white" }>
-                  {i === 0 ? letters[j] : ''}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="progress-board">
-        {songArray.map((row, i) => (
-          <div key={i} className="row">
-            { row.map((col, j) => (
-              <div key={j}
-              className={position === i ? "tile-small tile-red" : 
-              (col ? "tile-small tile-black" : "tile-small tile-white") }>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+        <div className="piano">
+        <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
+          {board.map((row, i) => (
+            <div key={i} className="row">
+              { row.map((col, j) => (
+                <div key={j}
+                className={col ? "tile tile-black" : "tile tile-white" }>
+                    {i === 0 ? letters[j] : ''}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="progress-board">
+          {songArray.map((row, i) => (
+            <div key={i} className="row">
+              { row.map((col, j) => (
+                <div key={j}
+                className={position === i ? "tile-small tile-red" : 
+                (col ? "tile-small tile-black" : "tile-small tile-white") }>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <audio id="C" src="http://www.vibrationdata.com/piano_middle_C.mp3"></audio>
+        <audio id="Db" src="http://www.vibrationdata.com/piano_C_sharp.mp3"></audio>
+        <audio id="D" src="http://www.vibrationdata.com/piano_D.mp3"></audio>
+        <audio id="Eb" src="http://www.vibrationdata.com/piano_D_sharp.mp3"></audio>
+        <audio id="E" src="http://www.vibrationdata.com/piano_E.mp3"></audio>
+        <audio id="F" src="http://www.vibrationdata.com/piano_F.mp3"></audio>
+        <audio id="Gb" src="http://www.vibrationdata.com/piano_F_sharp.mp3"></audio>
+        <audio id="G" src="http://www.vibrationdata.com/piano_G.mp3"></audio>
+        <audio id="Ab" src="http://www.vibrationdata.com/piano_G_sharp.mp3"></audio>
+        <audio id="A" src="http://www.vibrationdata.com/piano_A.mp3"></audio>
+        <audio id="Bb" src="http://www.vibrationdata.com/piano_A_sharp.mp3"></audio>
+        <audio id="B" src="http://www.vibrationdata.com/piano_B.mp3"></audio>
       </div>
     )
   }
