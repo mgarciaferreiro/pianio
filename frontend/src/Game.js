@@ -1,6 +1,6 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
-
+import Victory from './Victory.js'
 // TODO: get song from server, get number of keys based on difficulty
 const numKeys = 6
 const songLength = 40
@@ -49,7 +49,7 @@ function Game() {
         const correctTile = song[position]
         if (tilePressed === correctTile) {
           playNote()
-            if (position === song.length) {
+            if (position === song.length-1) {
                 setHasWon(true)
                 setIsActive(false)
             } else {
@@ -84,46 +84,51 @@ function Game() {
     }, [handleKeyPress])
   
     return (
-      <div className="flex-container">
-        <div className="piano">
-        <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
-          {board.map((row, i) => (
-            <div key={i} className="row">
-              { row.map((col, j) => (
-                <div key={j}
-                className={col ? "tile tile-black" : "tile tile-white" }>
-                    {i === 0 ? letters[j] : ''}
-                </div>
-              ))}
-            </div>
-          ))}
+      <div>
+        {hasWon && <Victory time = {Number(seconds / 10).toFixed(1)} />}
+        {!hasWon &&
+        <div className="flex-container">
+          <div className="piano">
+          <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
+            {board.map((row, i) => (
+              <div key={i} className="row">
+                { row.map((col, j) => (
+                  <div key={j}
+                  className={col ? "tile tile-black" : "tile tile-white" }>
+                      {i === 0 ? letters[j] : ''}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="progress-board">
+            {songArray.map((row, i) => (
+              <div key={i} className="row">
+                { row.map((col, j) => (
+                  <div key={j}
+                  className={position === i ? "tile-small tile-red" : 
+                  (col ? "tile-small tile-black" : "tile-small tile-white") }>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <audio id="C" src="http://www.vibrationdata.com/piano_middle_C.mp3"></audio>
+          <audio id="Db" src="http://www.vibrationdata.com/piano_C_sharp.mp3"></audio>
+          <audio id="D" src="http://www.vibrationdata.com/piano_D.mp3"></audio>
+          <audio id="Eb" src="http://www.vibrationdata.com/piano_D_sharp.mp3"></audio>
+          <audio id="E" src="http://www.vibrationdata.com/piano_E.mp3"></audio>
+          <audio id="F" src="http://www.vibrationdata.com/piano_F.mp3"></audio>
+          <audio id="Gb" src="http://www.vibrationdata.com/piano_F_sharp.mp3"></audio>
+          <audio id="G" src="http://www.vibrationdata.com/piano_G.mp3"></audio>
+          <audio id="Ab" src="http://www.vibrationdata.com/piano_G_sharp.mp3"></audio>
+          <audio id="A" src="http://www.vibrationdata.com/piano_A.mp3"></audio>
+          <audio id="Bb" src="http://www.vibrationdata.com/piano_A_sharp.mp3"></audio>
+          <audio id="B" src="http://www.vibrationdata.com/piano_B.mp3"></audio>
         </div>
-        <div className="progress-board">
-          {songArray.map((row, i) => (
-            <div key={i} className="row">
-              { row.map((col, j) => (
-                <div key={j}
-                className={position === i ? "tile-small tile-red" : 
-                (col ? "tile-small tile-black" : "tile-small tile-white") }>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        <audio id="C" src="http://www.vibrationdata.com/piano_middle_C.mp3"></audio>
-        <audio id="Db" src="http://www.vibrationdata.com/piano_C_sharp.mp3"></audio>
-        <audio id="D" src="http://www.vibrationdata.com/piano_D.mp3"></audio>
-        <audio id="Eb" src="http://www.vibrationdata.com/piano_D_sharp.mp3"></audio>
-        <audio id="E" src="http://www.vibrationdata.com/piano_E.mp3"></audio>
-        <audio id="F" src="http://www.vibrationdata.com/piano_F.mp3"></audio>
-        <audio id="Gb" src="http://www.vibrationdata.com/piano_F_sharp.mp3"></audio>
-        <audio id="G" src="http://www.vibrationdata.com/piano_G.mp3"></audio>
-        <audio id="Ab" src="http://www.vibrationdata.com/piano_G_sharp.mp3"></audio>
-        <audio id="A" src="http://www.vibrationdata.com/piano_A.mp3"></audio>
-        <audio id="Bb" src="http://www.vibrationdata.com/piano_A_sharp.mp3"></audio>
-        <audio id="B" src="http://www.vibrationdata.com/piano_B.mp3"></audio>
+        }
       </div>
     )
-  }
+}
   
   export default Game
