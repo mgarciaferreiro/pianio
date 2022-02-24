@@ -1,6 +1,6 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
-
+import Victory from './Victory.js'
 // TODO: get song from server, get number of keys based on difficulty
 const numKeys = 6
 const songLength = 40
@@ -48,7 +48,7 @@ function Game() {
 
         const correctTile = song[position]
         if (tilePressed === correctTile) {
-            if (position === song.length) {
+            if (position === song.length-1) {
                 setHasWon(true)
                 setIsActive(false)
             } else {
@@ -68,6 +68,9 @@ function Game() {
     }, [handleKeyPress])
   
     return (
+      <div>
+        {hasWon && <Victory time = {Number(seconds / 10).toFixed(1)} />}
+        {!hasWon &&
       <div className="flex-container">
       <div className="piano">
       <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
@@ -94,6 +97,7 @@ function Game() {
           </div>
         ))}
       </div>
+      </div>}
       </div>
     )
   }
