@@ -3,9 +3,8 @@ import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
-import { connect, createGame, registerCallbacks } from './networking';
+import { createGame } from './networking';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import io from 'socket.io-client';
 
 function Home() {
   const [name, setName] = useState('')
@@ -58,7 +57,7 @@ function Home() {
       {loggedIn && (
         <div>
           <Link to="/lobby">
-            <button className="join" onClick={() => createGame()}>
+            <button className="join" onClick={() => createGame(name)}>
               Create a Room
             </button>
           </Link>
