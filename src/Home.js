@@ -3,12 +3,12 @@ import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
+import { createGame } from './networking';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Home() {
   const [name, setName] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
-  const [createRoom, setCreateRoom] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
 
@@ -22,10 +22,6 @@ function Home() {
       setErrorMessage('')
       setLoggedIn(!loggedIn)
     }
-  }
-
-  const roomCreation = () => {
-    setCreateRoom(!createRoom)
   }
 
   useEffect(() => {
@@ -61,7 +57,7 @@ function Home() {
       {loggedIn && (
         <div>
           <Link to="/lobby">
-            <button className="join" onClick={() => roomCreation()}>
+            <button className="join" onClick={() => createGame(name)}>
               Create a Room
             </button>
           </Link>

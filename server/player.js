@@ -1,4 +1,4 @@
-const Constants = require('../shared/constants');
+const Constants = require('../src/shared/constants');
 
 class Player {
     constructor(id, username) {
