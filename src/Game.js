@@ -1,12 +1,16 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import Victory from './Victory.js'
+import {getUsername, initPositions, updatePosition, getPositions} from './state'
+import {sendUpdate} from './networking'
+
 // TODO: get song from server, get number of keys based on difficulty
 const numKeys = 6
 const songLength = 40
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
 const song = Array.from({length: 40}, () => Math.floor(Math.random() * numKeys));
 const songArray = Array(songLength).fill().map(() => Array(numKeys).fill(0));
+
 for (let i = 0; i < songLength; i++) {
   let blackTileIndex = song[i]
   songArray[i][blackTileIndex] = 1
@@ -30,6 +34,9 @@ function Game() {
     const [isActive, setIsActive] = useState(true);
 
     useEffect(() => {
+      // Initialize positions
+      initPositions()
+      // Start timer
       let interval = null;
       if (isActive) {
         interval = setInterval(() => {
@@ -55,6 +62,9 @@ function Game() {
             } else {
                 setBoard(getBoardAtPosition(position + 1))
             }
+            // TODO: update game ID
+            sendUpdate(getUsername(), position + 1, '123')
+            updatePosition(getUsername(), position + 1)
             setPosition(position + 1)
         } else {
             setHasLost(true)
@@ -103,13 +113,19 @@ function Game() {
           </div>
           <div className="progress-board">
             {songArray.map((row, i) => (
-              <div key={i} className="row">
+              <div key={i}>
+              <div className="row">
                 { row.map((col, j) => (
                   <div key={j}
                   className={position === i ? "tile-small tile-red" : 
                   (col ? "tile-small tile-black" : "tile-small tile-white") }>
                   </div>
                 ))}
+              </div>
+              {/* TODO: update progress board 
+              { Object.entries(getPositions()).map((player, playerPos) => (
+                playerPos === i ? <p>{player}</p> : null
+              ))} */}
               </div>
             ))}
           </div>

@@ -3,7 +3,8 @@ import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
-import { createGame } from './networking';
+import { createGame, joinGame } from './networking';
+import { setUsername } from './state';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Home() {
@@ -46,6 +47,7 @@ function Home() {
             className="addName"
             onChange={e => {
               setName(e.target.value)
+              setUsername(e.target.value)
             }}
           ></input>
           <button className="play" onClick={() => checkName()}>
@@ -62,7 +64,10 @@ function Home() {
             </button>
           </Link>
           <Link to="/lobby">
-            <button className="join">Join a Room</button>
+            {/* TODO: change hardcoded game ID */}
+            <button className="join" onClick={() => joinGame(name, '123')}>
+              Join a Room
+            </button>
           </Link>
         </div>
       )}
