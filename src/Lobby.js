@@ -6,6 +6,8 @@ import waitingGif from './waiting.gif'
 import waitingGif2 from './waiting2.gif'
 import waitingGif3 from './waiting3.gif'
 import waitingGif4 from './waiting4.gif'
+import donald from './donald.gif'
+import tom from './tom.gif'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Lobby() {
@@ -30,7 +32,7 @@ function Lobby() {
         </div>
 
         <div className="player2">
-          <img className="waitingGif" src={waitingGif2} alt="waiting" />
+          <img className="waitingGif" src={waitingGif3} alt="waiting" />
           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
             Amy
           </h3>
@@ -39,13 +41,13 @@ function Lobby() {
 
       <div className="flex-container">
         <div className="player1">
-          <img className="waitingGif" src={waitingGif3} alt="waiting" />
+          <img className="waitingGif" src={donald} alt="waiting" />
           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
             Xavier
           </h3>
         </div>
         <div className="player2">
-          <img className="waitingGif" src={waitingGif4} alt="waiting" />
+          <img className="waitingGif" src={tom} alt="waiting" />
           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
             Marta
           </h3>
