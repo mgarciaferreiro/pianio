@@ -14,6 +14,5 @@ export const joinGame = (username, gameId) => {
 
 export const sendUpdate = (username, position, gameId) => {
   console.log('Sending game update ' + gameId + username + position + socket.id);
-  socket.emit(Constants.MSG_TYPES.GAME_UPDATE, username, position);
-  // socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE, username, position);
+  socket.emit(Constants.MSG_TYPES.GAME_UPDATE, username, position, gameId);
 }

@@ -4,11 +4,9 @@ import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
 import { createGame, joinGame } from './networking';
-import { setUsername } from './state';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
-function Home() {
-  const [name, setName] = useState('')
+function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
@@ -47,7 +45,6 @@ function Home() {
             className="addName"
             onChange={e => {
               setName(e.target.value)
-              setUsername(e.target.value)
             }}
           ></input>
           <button className="play" onClick={() => checkName()}>

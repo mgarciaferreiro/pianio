@@ -1,10 +1,9 @@
-const Constants = require('../src/shared/constants');
 
 class Player {
-    constructor(id, username) {
-      this.id = id;
+    constructor(username, character) {
       this.username = username;
-      this.position = 0; // -1 position means lost from misclick
+      this.character = character;
+      this.position = 0;
       this.isFinished = false;
     }
 
@@ -14,11 +13,10 @@ class Player {
 
     serializeForUpdate() {
       return {
-        id: this.id,
         username: this.username,
+        character: this.character,
         position: this.position,
-        hasWon: this.hasWon,
-        hasLost: this.hasLost
+        isFinished: this.isFinished,
       };
     }
 }

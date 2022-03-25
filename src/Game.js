@@ -1,22 +1,22 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import Victory from './Victory.js'
-import {getUsername, initPositions, updatePosition, getPositions} from './state'
-import {sendUpdate} from './networking'
+import { sendUpdate } from './networking'
+import Constants from './shared/constants';
 
-// TODO: get song from server, get number of keys based on difficulty
 const numKeys = 6
-const songLength = 40
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
-const song = Array.from({length: 40}, () => Math.floor(Math.random() * numKeys));
-const songArray = Array(songLength).fill().map(() => Array(numKeys).fill(0));
 
-for (let i = 0; i < songLength; i++) {
-  let blackTileIndex = song[i]
-  songArray[i][blackTileIndex] = 1
+const getSongArray = song => {
+  const songArray = Array(Constants.SONG_LENGTH).fill().map(() => Array(numKeys).fill(0))
+  for (let i = 0; i < Constants.SONG_LENGTH; i++) {
+    let blackTileIndex = song[i]
+    songArray[i][blackTileIndex] = 1
+  }
+  return songArray
 }
 
-const getBoardAtPosition = (pos) => {
+const getBoardAtPosition = (song, pos) => {
     const newBoard = Array(3).fill().map(() => Array(numKeys).fill(0));
     for (let i = 0; i < 3; i++) {
         let blackTileIndex = song[pos + i]
@@ -25,17 +25,17 @@ const getBoardAtPosition = (pos) => {
     return newBoard
 }
 
-function Game() {
+function Game({gameState, song, name}) {
+    // console.log(song)
     const [position, setPosition] = useState(0)
     const [hasWon, setHasWon] = useState(false)
     const [hasLost, setHasLost] = useState(false)
-    const [board, setBoard] = useState(getBoardAtPosition(0))
+    const [board, setBoard] = useState(getBoardAtPosition(song, 0))
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(true);
+    // console.log(board)
 
     useEffect(() => {
-      // Initialize positions
-      initPositions()
       // Start timer
       let interval = null;
       if (isActive) {
@@ -60,11 +60,9 @@ function Game() {
                 setHasWon(true)
                 setIsActive(false)
             } else {
-                setBoard(getBoardAtPosition(position + 1))
+                setBoard(getBoardAtPosition(song, position + 1))
             }
-            // TODO: update game ID
-            sendUpdate(getUsername(), position + 1, '123')
-            updatePosition(getUsername(), position + 1)
+            sendUpdate(name, position + 1, gameState.gameId)
             setPosition(position + 1)
         } else {
             setHasLost(true)
@@ -112,7 +110,7 @@ function Game() {
             ))}
           </div>
           <div className="progress-board">
-            {songArray.map((row, i) => (
+            {getSongArray(song).map((row, i) => (
               <div key={i}>
               <div className="row">
                 { row.map((col, j) => (
@@ -122,10 +120,7 @@ function Game() {
                   </div>
                 ))}
               </div>
-              {/* TODO: update progress board 
-              { Object.entries(getPositions()).map((player, playerPos) => (
-                playerPos === i ? <p>{player}</p> : null
-              ))} */}
+              {/* TODO: update progress board */}
               </div>
             ))}
           </div>
