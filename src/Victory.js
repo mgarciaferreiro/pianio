@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import WebFont from 'webfontloader'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import waitingGif from './waiting.gif'
+import minnie from './gifs/minnie.gif'
 
 
 function Victory(props) {
@@ -25,7 +25,7 @@ function Victory(props) {
         <p className="victoryTitle" style={{ fontFamily: 'Abril Fatface' }}>
         You Finished 1st
       </p>
-      <img className="victoryGif" src={waitingGif} alt="waiting" />
+      <img className="victoryGif" src={minnie} alt="waiting" />
 
       <p className="subtitle" style={{ fontFamily: 'Abril Fatface' }}>
         with {props.time}s

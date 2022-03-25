@@ -3,11 +3,10 @@ import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
-import { createGame } from './networking';
+import { createGame, joinGame } from './networking';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
-function Home() {
-  const [name, setName] = useState('')
+function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
@@ -62,7 +61,10 @@ function Home() {
             </button>
           </Link>
           <Link to="/lobby">
-            <button className="join">Join a Room</button>
+            {/* TODO: change hardcoded game ID */}
+            <button className="join" onClick={() => joinGame(name, '123')}>
+              Join a Room
+            </button>
           </Link>
         </div>
       )}

@@ -17,7 +17,10 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket));
   socket.on(Constants.MSG_TYPES.DISCONNECT, onDisconnect);
   // TODO: register the other functions
-  // socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
+  socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
+    joinGame(username, gameId, socket));
+  socket.on(Constants.MSG_TYPES.GAME_UPDATE, (username, position, gameId) => 
+    updateGame(username, position, gameId, socket));
   // socket.on(Constants.MSG_TYPES.START_GAME, startGame);
   // socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
   // socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
@@ -42,39 +45,52 @@ function onDisconnect() {
 
 function createGame(hostName, socket) {
   console.log('Creating game ' + hostName)
-  let gameId = (Math.floor(Math.random() * 100000 + 1));
+  // let gameId = (Math.floor(Math.random() * 100000 + 1));
   
-  while (gameId.toString() in games) {
-    gameId++;
-  }
+  // while (gameId.toString() in games) {
+  //   gameId++;
+  // }
 
-  gameId = gameId.toString();
-  const game = new Game(hostName);
+  // gameId = gameId.toString();
+
+  /* TODO: remove hardcoded game ID */
+  gameId = '123'
+
+  const game = new Game(hostName, gameId);
   game.addPlayer(hostName)
 
   games[gameId] = game;
   socket.join(gameId);
 
   console.log(hostName + ' created game ' + gameId);
-
-  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, gameId); //emit to client
+  console.log(game)
+  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game); //emit to client
 }
 
 // TODO: test and add back these functions
 
 
-// function joinGame(username, gameId) {
-//   if (!(gameId in games)) {
-//     this.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
-//   } else {
-//     game = games[gameId];
-//     game.addPlayer(username);
-//     this.join(gameId);
-//     this.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION); //emit to client
+function joinGame(username, gameId, socket) {
+  console.log('Joining game ' + gameId + username)
+  if (!(gameId in games)) {
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
+  } else {
+    game = games[gameId];
+    console.log(game)
+    game.addPlayer(username);
+    socket.join(gameId);
+    socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game); //emit to client
 
-//     this.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS); //emit to client
-//   }
-// }
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game); //emit to client
+  }
+}
+
+function updateGame(username, position, gameId, socket) {
+  console.log('Updating game ' + gameId + username + position)
+  game = games[gameId];
+  game.setPosition(username, position)
+  socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE, game); //emit to client
+}
 
 // function startGame(gameId) {
 //   this.to(gameId).emit(Constants.MSG_TYPES.START_GAME);
