@@ -56,7 +56,7 @@ function createGame(hostName, socket) {
   /* TODO: remove hardcoded game ID */
   gameId = '123'
 
-  const game = new Game(hostName, gameId);
+  const game = new Game(hostName, gameId, socket);
   game.addPlayer(hostName)
 
   games[gameId] = game;
@@ -76,8 +76,8 @@ function joinGame(username, gameId, socket) {
     socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
   } else {
     game = games[gameId];
-    console.log(game)
     game.addPlayer(username);
+    console.log(game)
     socket.join(gameId);
     socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game); //emit to client
 

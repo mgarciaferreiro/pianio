@@ -8,11 +8,13 @@ class Game {
     this.host = host
     this.gameId = gameId
     this.socket = socket
+    this.availableCharacters = ["minnie", "mickey", "donald", "goofy", "tom", "berlioz"]
 
     // Generate a random song with 6 notes
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
   }
 
+  // TODO: use this?
   start() {
     // Set timer to call update method 60 times / second 
     setInterval(this.update.bind(this), 1000 / 60);
@@ -20,12 +22,17 @@ class Game {
     this.socket.to(this.gameId).emit(Constants.MSG_TYPES.START_GAME)
   }
 
-  addPlayer(username, character) {
+  addPlayer(username) {
+    // Pick a random character and remove it from the array of available characters
+    const character = this.availableCharacters[Math.floor(Math.random()*this.availableCharacters.length)]
+    this.availableCharacters = this.availableCharacters.filter(function(ele){ return ele != character })
     this.players[username] = new Player(username, character)
   }
 
   removePlayer(username) {
+    const character = this.players[username].getCharacter()
     this.players[username] = null
+    this.availableCharacters.push(character)
   }
 
   setPosition(username, position) {
