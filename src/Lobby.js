@@ -16,7 +16,8 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { startGame } from './networking'
 
 
-const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
+const gifs = {minnie, mickey, donald, goofy, tom, berlioz}
+
 function Lobby({gameState, name}) {
   const clickedStartGame = () => {
     console.log(gameState.gameId)
@@ -36,6 +37,16 @@ function Lobby({gameState, name}) {
 
   return (
     <div>
+/*
+      <br />
+      <div className="flex-container">
+        {gameState != null ? Object.keys(gameState.players).map((player, i) => 
+          <div key={player} className={"player1"}>
+            <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
+            <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
+              {player}
+            </h3>
+*/
 {Session.get("Name") !== undefined &&
         <div>
         <br />
@@ -53,6 +64,7 @@ function Lobby({gameState, name}) {
             <Link to="/">
               <button className="startGame">Leave Lobby</button>
             </Link>
+
           </div>
         )}
   

@@ -74,7 +74,7 @@ function createGame(hostName, socket) {
   }
 
   const game = new Game(hostName, gameId, socket);
-  game.addPlayer(hostName, null, socket.id)
+  game.addPlayer(hostName, socket.id)
 
   games[gameId] = game;
   socket.join(gameId);
@@ -92,9 +92,9 @@ function joinGame(username, gameId, socket) {
     socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
   } else {
     game = games[gameId];
-    console.log(socket)
-    game.addPlayer(username, null, socket.id);
+    game.addPlayer(username, socket.id);
     socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game.createGameWithoutSocket()); 
+
     socket.join(gameId);
     socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game.createGameWithoutSocket()); //emit to client
 

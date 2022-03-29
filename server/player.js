@@ -11,6 +11,10 @@ class Player {
       this.position = position
     }
 
+    getCharacter() {
+      return this.character
+    }
+
     serializeForUpdate() {
       return {
         username: this.username,

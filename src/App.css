@@ -318,7 +318,7 @@ li {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: -200px;
+  /* margin-right: -100px; */
   flex-direction: column-reverse;
   height: 100vh;
   width: 100%;
@@ -364,9 +364,10 @@ li {
 
 .progress-board {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   margin-left: 0px;
-  align-items: center;
+  margin-right: 300px;
+  align-items: left;
   flex-direction: column-reverse;
   height: 100vh;
   width: 10%;
@@ -377,4 +378,14 @@ li {
   height: 12px;
   width: 10px;
   border: 0.5px solid #CECECE;
+}
+
+.profilePic {
+  width:100px;
+  height:100px;
+  margin-bottom:-30px;
+}
+
+.player {
+  position: absolute;
 }

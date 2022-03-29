@@ -12,6 +12,8 @@ class Game {
 //     this.lastUpdateTime = Date.now();
 //     this.shouldSendUpdate = false;
     this.gameId = gameId
+    this.availableCharacters = ["minnie", "mickey", "donald", "goofy", "tom", "berlioz"]
+
     this.gameSocket = gameSocket
     this.socketIdToUsername = {}
 
@@ -19,13 +21,17 @@ class Game {
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
   }
 
+  // TODO: use this?
   start() {
     // Set timer to call update method 60 times / second 
     setInterval(this.update.bind(this), 1000 / 60);
   }
 
-  addPlayer(username, character, socketId) {
-    console.log('adding ' + socketId)
+  addPlayer(username, socketId) {
+    // Pick a random character and remove it from the array of available characters
+    const character = this.availableCharacters[Math.floor(Math.random()*this.availableCharacters.length)]
+    this.availableCharacters = this.availableCharacters.filter(function(ele){ return ele != character })
+
     this.players[username] = new Player(username, character)
     this.socketIdToUsername[socketId] = username
   }
@@ -35,6 +41,8 @@ class Game {
     console.log(this.players)
     console.log(this.socketIdToUsername)
     if (socketId in this.socketIdToUsername) {
+      const character = this.players[this.socketIdToUsername[socketId]].getCharacter()
+      this.availableCharacters.push(character)
       delete this.players[this.socketIdToUsername[socketId]]
       delete this.socketIdToUsername[socketId]
       return true

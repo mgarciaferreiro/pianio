@@ -1,6 +1,7 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import Victory from './Victory.js'
+import Player from './Player.js'
 import useSound from 'use-sound'
 import A from './notes/A.mp3'
 import As from './notes/As.mp3'
@@ -200,19 +201,25 @@ function Game({gameState, song, name}) {
             ))}
           </div>
           <div className="progress-board">
+            <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>START</h3>
             {getSongArray(song).map((row, i) => (
-              <div key={i}>
-              <div className="row">
-                { row.map((col, j) => (
-                  <div key={j}
-                  className={position === i ? "tile-small tile-red" : 
-                  (col ? "tile-small tile-black" : "tile-small tile-white") }>
-                  </div>
-                ))}
-              </div>
-              {/* TODO: update progress board */}
+              <div key={i} >
+                <div className="row">
+                  { row.map((col, j) => (
+                    <div key={j}
+                    className={col ? "tile-small tile-black" : "tile-small tile-white"}>
+                    </div>
+                  ))}
+                  {position === i ? 
+                  <Player className="player" player={gameState.players[name]}></Player> : null}
+                  { Object.keys(gameState.players).map((player, j) => (
+                    gameState.players[player].position === i && player !== name ?
+                    <Player className="player" player={gameState.players[player]}></Player> : null
+                  ))}
+                </div>
               </div>
             ))}
+            <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>END</h3>
           </div>
         </div>
         }
