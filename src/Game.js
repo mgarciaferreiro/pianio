@@ -1,18 +1,31 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import Victory from './Victory.js'
-// TODO: get song from server, get number of keys based on difficulty
+import useSound from 'use-sound';
+import A_Note from './Notes/piano-a_A_major.mp3';
+import B_Note from './Notes/piano-b_B_major.mp3';
+import C_Note from './Notes/piano-c_C_major.mp3';
+import D_Note from './Notes/piano-d_D_major.mp3';
+import E_Note from './Notes/piano-e_E_major.mp3';
+import F_Note from './Notes/piano-f_F_major.mp3';
+import G_Note from './Notes/piano-g_G_major.mp3';
+
+import { sendUpdate } from './networking'
+import Constants from './shared/constants';
+
 const numKeys = 6
-const songLength = 40
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
-const song = Array.from({length: 40}, () => Math.floor(Math.random() * numKeys));
-const songArray = Array(songLength).fill().map(() => Array(numKeys).fill(0));
-for (let i = 0; i < songLength; i++) {
-  let blackTileIndex = song[i]
-  songArray[i][blackTileIndex] = 1
+
+const getSongArray = song => {
+  const songArray = Array(Constants.SONG_LENGTH).fill().map(() => Array(numKeys).fill(0))
+  for (let i = 0; i < Constants.SONG_LENGTH; i++) {
+    let blackTileIndex = song[i]
+    songArray[i][blackTileIndex] = 1
+  }
+  return songArray
 }
 
-const getBoardAtPosition = (pos) => {
+const getBoardAtPosition = (song, pos) => {
     const newBoard = Array(3).fill().map(() => Array(numKeys).fill(0));
     for (let i = 0; i < 3; i++) {
         let blackTileIndex = song[pos + i]
@@ -21,15 +34,18 @@ const getBoardAtPosition = (pos) => {
     return newBoard
 }
 
-function Game() {
+function Game({gameState, song, name}) {
+    // console.log(song)
     const [position, setPosition] = useState(0)
     const [hasWon, setHasWon] = useState(false)
     const [hasLost, setHasLost] = useState(false)
-    const [board, setBoard] = useState(getBoardAtPosition(0))
+    const [board, setBoard] = useState(getBoardAtPosition(song, 0))
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(true);
+    // console.log(board)
 
     useEffect(() => {
+      // Start timer
       let interval = null;
       if (isActive) {
         interval = setInterval(() => {
@@ -41,11 +57,10 @@ function Game() {
       return () => clearInterval(interval);
     }, [isActive, seconds]);
 
+  
     const handleKeyPress = (event) => {
-        console.log(event.key)
         const tilePressed = letters.indexOf(event.key.toUpperCase())
         if (tilePressed === -1) return
-
         const correctTile = song[position]
         if (tilePressed === correctTile) {
           playNote()
@@ -53,27 +68,42 @@ function Game() {
                 setHasWon(true)
                 setIsActive(false)
             } else {
-                setBoard(getBoardAtPosition(position + 1))
+                setBoard(getBoardAtPosition(song, position + 1))
             }
+            sendUpdate(name, position + 1, gameState.gameId)
             setPosition(position + 1)
         } else {
             setHasLost(true)
         }
     }
 
-    // plays a random key
+    const [play_A] = useSound(A_Note);
+    const [play_B] = useSound(B_Note);
+    const [play_C] = useSound(C_Note);
+    const [play_D] = useSound(D_Note);
+    const [play_E] = useSound(E_Note);
+    const [play_F] = useSound(F_Note);
+    const [play_G] = useSound(G_Note);
+
+    // plays a randoA_Notem key
     function playNote() {
-      const notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+      const notes = ["A_Note", "B_Note", "C_Note","D_Note","E_Note","F_Note", "G_Note"]
       const randomNote = notes[Math.floor(Math.random() * notes.length)]
-      const noteAudio = document.getElementById(randomNote)
-      noteAudio.currentTime = 0
-      noteAudio.play()
-        .then(() => {
-          // audio is playing
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      if(randomNote === 'A_Note') {
+        play_A()
+      } else if(randomNote === 'B_Note') {
+        play_B()
+      } else if(randomNote === 'C_Note') {
+        play_C()
+      } else if(randomNote === 'D_Note') {
+        play_D()
+      } else if(randomNote === 'E_Note') {
+        play_E()
+      } else if(randomNote === 'F_Note') {
+        play_F()
+      } else if(randomNote === 'G_Note') {
+        play_G()
+      } 
     }
     
     useEffect(() => {
@@ -82,8 +112,9 @@ function Game() {
           document.removeEventListener("keydown", handleKeyPress)
         }
     }, [handleKeyPress])
-  
+
     return (
+
       <div>
         {hasWon && <Victory time = {Number(seconds / 10).toFixed(1)} />}
         {!hasWon &&
@@ -102,14 +133,17 @@ function Game() {
             ))}
           </div>
           <div className="progress-board">
-            {songArray.map((row, i) => (
-              <div key={i} className="row">
+            {getSongArray(song).map((row, i) => (
+              <div key={i}>
+              <div className="row">
                 { row.map((col, j) => (
                   <div key={j}
                   className={position === i ? "tile-small tile-red" : 
                   (col ? "tile-small tile-black" : "tile-small tile-white") }>
                   </div>
                 ))}
+              </div>
+              {/* TODO: update progress board */}
               </div>
             ))}
           </div>

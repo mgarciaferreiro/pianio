@@ -53,8 +53,20 @@
   text-align: center;
   letter-spacing: 0.05em;
   /* margin-bottom: -10px; */
-
 }
+
+.lobbyName {
+  color: #CFB53B;
+  margin-top:1%;
+  font-style: normal;
+  /* font-weight: bold; */
+  font-size: 60px;
+  line-height: 61px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  /* margin-bottom: -10px; */
+}
+
 .victoryTitle {
   color: #CFB53B;
   margin-top:2%;
@@ -125,6 +137,18 @@ li {
   height:42px;
   margin-left:5px;
   width:70px;
+  border-radius: 3px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+}
+.joinRoom {
+  background: rgba(156, 133, 25, 0.81);
+  height:42px;
+  margin-left:5px;
   border-radius: 3px;
   font-family: Arial;
   font-style: normal;
@@ -232,7 +256,7 @@ li {
   margin-top: 1%;
   margin-left: 10%;
   /* margin-right: 5%; */
-  width: 40%;
+  width: 20%;
   flex: 1;
 }
 
@@ -240,9 +264,23 @@ li {
   margin-top: 1%;
   /* margin-left: 5%; */
   margin-right: 10%;
+  width: 20%;
+  flex: 1;
+}
+
+/* .player1 {
+  margin-top: 1%;
+  margin-left: 10%;
   width: 40%;
   flex: 1;
 }
+
+.player2 {
+  margin-top: 1%;
+  margin-right: 10%;
+  width: 40%;
+  flex: 1;
+} */
 
 .flex-container {
   display: flex;
