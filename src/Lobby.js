@@ -9,20 +9,16 @@ import goofy from './gifs/goofy.gif'
 import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
 import { useNavigate } from "react-router-dom";
-import { Cookies, useCookies } from 'react-cookie';
+import Session from 'react-session-api'
 
 
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 
 const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
-
 function Lobby({gameState, name}) {
-  const [cookies, setCookie] = useCookies(['user']);
-
-  
   let navigate = useNavigate();
   useEffect(() => {
-    if(cookies.Name === undefined) {
+    if(Session.get("Name") === undefined) {
       navigate('/')
     }
     WebFont.load({
@@ -34,7 +30,7 @@ function Lobby({gameState, name}) {
 
   return (
     <div>
-{
+{Session.get("Name") !== undefined &&
         <div>
         <br />
         <p className="lobbyName" style={{ fontFamily: 'Abril Fatface' }}>

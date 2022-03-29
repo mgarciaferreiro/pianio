@@ -8,6 +8,7 @@ import { createGame, joinGame } from './networking';
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
+import Session from 'react-session-api'
 
 function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -35,6 +36,7 @@ function Home({name, setName}) {
       setErrorMessage('')
       setLoggedIn(!loggedIn)
       handleCookies()
+      Session.set("Name", name);
     }
   }
 
@@ -54,6 +56,8 @@ function Home({name, setName}) {
   }
 
   useEffect(() => {
+    console.log(Session.get("Name"))
+
     setName(cookies.Name)
     socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
       console.log("IN SOCKET ENDPT CLIENT JOIN")

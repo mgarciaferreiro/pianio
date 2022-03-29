@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 import { sendUpdate } from './networking'
 import Constants from './shared/constants';
-import { Cookies, useCookies } from 'react-cookie';
+import Session from 'react-session-api'
 
 const numKeys = 6
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
@@ -45,7 +45,6 @@ function Game({gameState, song, name}) {
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(true);
     // console.log(board)
-    const [cookies, setCookie] = useCookies(['user']);
     
     useEffect(() => {
       // Start timer
@@ -108,7 +107,7 @@ function Game({gameState, song, name}) {
     let navigate = useNavigate();
 
     useEffect(() => {
-      if(cookies.Name === undefined) {
+      if(Session.get("Name") === undefined) {
         navigate('/')
       }
         document.addEventListener("keydown", handleKeyPress)
