@@ -41,18 +41,21 @@ function App() {
       setSong(game.song)
       navigate('/Lobby')
     });
-    socket.on(Constants.MSG_TYPES.GAME_UPDATE, game => {
+    socket.on(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game => {
       console.log('Received game update');
       console.log(game)
       setGameState(game)
     });
+    socket.on(Constants.MSG_TYPES.START_GAME_RESPONSE, () => {
+      navigate('/Game')
+    })
     return () => {
       socket.off('connect');
       socket.off('disconnect');
       socket.off(Constants.MSG_TYPES.CREATE_GAME_SUCCESS)
       socket.off(Constants.MSG_TYPES.PLAYER_JOINED_SESSION)
       socket.off(Constants.MSG_TYPES.JOIN_GAME_SUCCESS)
-      socket.off(Constants.MSG_TYPES.GAME_UPDATE)
+      socket.off(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE)
     };
   });
 

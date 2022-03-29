@@ -9,10 +9,17 @@ import goofy from './gifs/goofy.gif'
 import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
+import { startGame } from './networking'
+
 
 const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
 
 function Lobby({gameState, name}) {
+
+  const clickedStartGame = () => {
+    console.log(gameState.gameId)
+    startGame(gameState.gameId)
+  }
 
   useEffect(() => {
 
@@ -32,9 +39,8 @@ function Lobby({gameState, name}) {
           Lobby {gameState.gameId}
         </p>
         {gameState.host === name && (
-          <Link to="/game">
-            <button className="startGame">Start Game</button>
-          </Link>
+          <button className="startGame" onClick={() => clickedStartGame()}>
+            Start Game</button>
         )}
   
         {gameState.host !== name && (
