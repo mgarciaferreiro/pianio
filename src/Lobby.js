@@ -10,23 +10,20 @@ import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
-function Lobby() {
-  const [roomCode, setRoomCode] = useState('Room1')
-  const [name, setName] = useState('Andri')
-  const [players, setPlayers] = useState([
-    { name: 'Bandri', picture: 'waitingGif' },
-    { name: 'Xavier', picture: 'waitingGif2' },
-    { name: 'Marta', picture: 'waitingGi3' },
-    { name: 'A', picture: '' },
-    { name: 'B', picture: 'waitingGif' },
-    // {"name" : "C", "picture" : "waitingGif2", "joined" : "none"},
-    // {"name" : "D", "picture" : "waitingGi3", "joined" : "none"},
-    // {"name" : "", "picture" : "", "joined" : "none"},
-  ])
-
 const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
 
-function Lobby({gameState}) {
+// function Lobby({gameState}) {
+function Lobby({}) {
+  const [name, setName] = useState('Andri')
+  const [gameState, setGameState] = useState({
+    players: [
+      { name: 'Bandri', picture: 'minnie' },
+      { name: 'Xavier', picture: 'mickey' },
+      { name: 'Marta', picture: 'donald' },
+      { name: 'A', picture: '' },
+      { name: 'B', picture: 'goofy' },
+    ],
+  })
   useEffect(() => {
     WebFont.load({
       google: {
@@ -34,95 +31,72 @@ function Lobby({gameState}) {
       },
     })
   }, [])
-  // Taking in: room code, number of users
-  //
+
   return (
     <div>
       <br />
       <p className="lobbyName" style={{ fontFamily: 'Abril Fatface' }}>
-        Lobby 68fjcu381s
-      </p>      {players[0].name === name && (
+        Lobby 68fj
+      </p>
+      {gameState.players[0].name === name && (
         <Link to="/game">
           <button className="startGame">Start Game</button>
         </Link>
       )}
 
-      {players[0].name !== name && (
+      {gameState.players[0].name !== name && (
         <div>
-        <h3>Waiting for {players[0].name} to start the game</h3>
-        <Link to="/">
-          <button className="startGame">Leave Lobby</button>
-        </Link>
-       <div className="flex-container">
-//         {gameState != null ? Object.keys(gameState.players).map((player, i) => 
-//           <div key={player} className={"player1"}>
-//             <img className="waitingGif" src={gifs[i]} alt="waiting" />
-//             <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
-//               {player}
-//             </h3>
-//           </div>
-//         ) : null}
-//         {/* <div className="player1">
-//           <img className="waitingGif" src={minnie} alt="waiting" />
-//           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
-//             Andri
-//           </h3>
-//         </div>
-
-//         <div className="player2">
-//           <img className="waitingGif" src={mickey} alt="waiting" />
-//           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
-//             Amy
-//           </h3>
+          <h3>Waiting for {gameState.players[0].name} to start the game</h3>
+          <Link to="/">
+            <button className="startGame">Leave Lobby</button>
+          </Link>
         </div>
       )}
 
-      {players.map((player, i) => {
-        console.log(i)
-        console.log(player)
-        if (i + 1 < players.length && i % 2 === 0) {
-          return (
-            <div className="flex-container">
-              <div className="player1" style={{ visibility: 'visible' }}>
-                <img className="waitingGif" src={waitingGif3} alt="waiting" />
-                <h3
-                  className="playerCount"
-                  style={{ fontFamily: 'Abril Fatface' }}
-                >
-                  {player.name}
-                </h3>
+      {gameState != null &&
+        Object.keys(gameState.players).map((player, i) => {
+          if (i + 1 < gameState.players.length && i % 2 === 0) {
+            return (
+              <div className="flex-container">
+                <div className="player1" style={{ visibility: 'visible' }}>
+                  <img className="waitingGif" src={gifs[i]} alt="waiting" />
+                  <h3
+                    className="playerCount"
+                    style={{ fontFamily: 'Abril Fatface' }}
+                  >
+                    {gameState.players[i].name}
+                  </h3>
+                </div>
+                <div className="player2" style={{ visibility: 'visible' }}>
+                  <img className="waitingGif" src={gifs[i + 1]} alt="waiting" />
+                  <h3
+                    className="playerCount"
+                    style={{ fontFamily: 'Abril Fatface' }}
+                  >
+                    {gameState.players[i + 1].name}
+                  </h3>
+                </div>
               </div>
-              <div className="player2" style={{ visibility: 'visible' }}>
-                <img className="waitingGif" src={waitingGif4} alt="waiting" />
-                <h3
-                  className="playerCount"
-                  style={{ fontFamily: 'Abril Fatface' }}
-                >
-                  {players[i + 1].name}
-                </h3>
+            )
+          } else if (i === gameState.players.length - 1 && i % 2 === 0) {
+            return (
+              <div className="flex-container">
+                <div className="player1" style={{ visibility: player.joined }}>
+                  <img className="waitingGif" src={gifs[i]} alt="waiting" />
+                  <h3
+                    className="playerCount"
+                    style={{ fontFamily: 'Abril Fatface' }}
+                  >
+                    {gameState.players[i].name}
+                  </h3>
+                </div>
+                <div className="player2" style={{ visibility: 'hidden' }}>
+                  <img className="waitingGif" src={gifs[i]} alt="waiting" />
+                </div>
               </div>
-            </div>
-          )
-        } else if (i === players.length - 1 && i % 2 === 0) {
-          return (
-            <div className="flex-container">
-              <div className="player1" style={{ visibility: player.joined }}>
-                <img className="waitingGif" src={waitingGif3} alt="waiting" />
-                <h3
-                  className="playerCount"
-                  style={{ fontFamily: 'Abril Fatface' }}
-                >
-                  {player.name}
-                </h3>
-              </div>
-              <div className="player2" style={{ visibility: 'hidden' }}>
-                <img className="waitingGif" src={waitingGif4} alt="waiting" />
-              </div>
-            </div>
-          )
-        }
-      })}
-
+            )
+          }
+        })}
     </div>
   )
 }
