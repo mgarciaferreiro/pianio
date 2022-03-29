@@ -14,5 +14,10 @@ export const joinGame = (username, gameId) => {
 
 export const sendUpdate = (username, position, gameId) => {
   console.log('Sending game update ' + gameId + username + position + socket.id);
-  socket.emit(Constants.MSG_TYPES.GAME_UPDATE, username, position, gameId);
+  socket.emit(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, username, position, gameId);
+}
+
+export const startGame = (gameId) => {
+  console.log('sending start game request ' + gameId);
+  socket.emit(Constants.MSG_TYPES.START_GAME_REQUEST, gameId)
 }

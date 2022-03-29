@@ -1,14 +1,21 @@
 const Constants = require('../src/shared/constants');
 const Player = require('./player');
-
 class Game {
 
-  constructor(host, gameId, socket) {
+  constructor(host, gameId, gameSocket) {
     this.players = {} //maps player name to player object
     this.host = host
+    
+//     // Generate a random song with 5 notes
+//     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
+//     console.log(this.song)
+//     this.lastUpdateTime = Date.now();
+//     this.shouldSendUpdate = false;
     this.gameId = gameId
-    this.socket = socket
     this.availableCharacters = ["minnie", "mickey", "donald", "goofy", "tom", "berlioz"]
+
+    this.gameSocket = gameSocket
+    this.socketIdToUsername = {}
 
     // Generate a random song with 6 notes
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
@@ -18,21 +25,30 @@ class Game {
   start() {
     // Set timer to call update method 60 times / second 
     setInterval(this.update.bind(this), 1000 / 60);
-
-    this.socket.to(this.gameId).emit(Constants.MSG_TYPES.START_GAME)
   }
 
-  addPlayer(username) {
+  addPlayer(username, socketId) {
     // Pick a random character and remove it from the array of available characters
     const character = this.availableCharacters[Math.floor(Math.random()*this.availableCharacters.length)]
     this.availableCharacters = this.availableCharacters.filter(function(ele){ return ele != character })
+
     this.players[username] = new Player(username, character)
+    this.socketIdToUsername[socketId] = username
   }
 
-  removePlayer(username) {
-    const character = this.players[username].getCharacter()
-    this.players[username] = null
-    this.availableCharacters.push(character)
+  removePlayer(socketId) {
+    console.log("in remove player " + socketId)
+    console.log(this.players)
+    console.log(this.socketIdToUsername)
+    if (socketId in this.socketIdToUsername) {
+      const character = this.players[this.socketIdToUsername[socketId]].getCharacter()
+      this.availableCharacters.push(character)
+      delete this.players[this.socketIdToUsername[socketId]]
+      delete this.socketIdToUsername[socketId]
+      return true
+    } else {
+      return false
+    }
   }
 
   setPosition(username, position) {
@@ -52,18 +68,27 @@ class Game {
     // })
 
     // Send a game update to each player 
-    this.socket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate())
+    this.gameSocket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, this.createGameWithoutSocket())
   }
 
   // Create update to send to the client
-  createUpdate() {
+  /*createUpdate() {
     return {
-      players: this.players.map(p => p.serializeForUpdate()),
+      players: this.players.map((name, playerObj) => p.serializeForUpdate()),
       host: this.host,
       gameId: this.gameId
     }
   }
-
+*/
+  createGameWithoutSocket() {
+    return {
+      players: this.players,
+      host: this.host,
+      gameId: this.gameId,
+      socketIdToUsername: this.socketIdToUsername,
+      song: this.song
+    }
+  }
 }
 
 module.exports = Game
