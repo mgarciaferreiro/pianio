@@ -14,6 +14,9 @@ class Game {
 //     this.shouldSendUpdate = false;
     this.gameId = gameId
     this.socket = socket
+    console.log("in constructor ")
+
+    this.socketIdToUsername = {}
 
     // Generate a random song with 6 notes
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
@@ -26,12 +29,24 @@ class Game {
     this.socket.to(this.gameId).emit(Constants.MSG_TYPES.START_GAME)
   }
 
-  addPlayer(username, character) {
+  addPlayer(username, character, socketId) {
+    console.log('adding ' + socketId)
     this.players[username] = new Player(username, character)
+    this.socketIdToUsername[socketId] = username
   }
 
-  removePlayer(username) {
-    this.players[username] = null
+  removePlayer(socketId) {
+    console.log("in remove player " + socketId)
+    console.log(this.players)
+    console.log(this.socketIdToUsername)
+    if (socketId in this.socketIdToUsername) {
+      console.log("found a match!")
+      delete this.players[this.socketIdToUsername[socketId]]
+      delete this.socketIdToUsername[socketId]
+      return true
+    } else {
+      return false
+    }
   }
 
   setPosition(username, position) {

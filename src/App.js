@@ -21,6 +21,7 @@ function App() {
       setIsConnected(true)
     });
     socket.on('disconnect', () => {
+      socket.emit(Constants.MSG_TYPES.DISCONNECT)
       setIsConnected(false)
     });
     socket.on(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game => {
