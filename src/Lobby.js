@@ -19,6 +19,8 @@ import { startGame } from './networking'
 const gifs = {minnie, mickey, donald, goofy, tom, berlioz}
 
 function Lobby({gameState, name}) {
+  let navigate = useNavigate()
+
   const clickedStartGame = () => {
     console.log(gameState.gameId)
     startGame(gameState.gameId)
@@ -36,8 +38,8 @@ function Lobby({gameState, name}) {
   }, [])
 
   return (
-    <div>
-/*
+    /**<div>
+
       <br />
       <div className="flex-container">
         {gameState != null ? Object.keys(gameState.players).map((player, i) => 
@@ -45,8 +47,8 @@ function Lobby({gameState, name}) {
             <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
             <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
               {player}
-            </h3>
-*/
+        </h3>*/
+<div>
 {Session.get("Name") !== undefined &&
         <div>
         <br />
@@ -98,7 +100,7 @@ function Lobby({gameState, name}) {
               return (
                 <div className="flex-container">
                   <div className="player1" style={{ visibility: player.joined }}>
-                    <img className="waitingGif" src={gifs[i]} alt="waiting" />
+                    <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
                     <h3
                       className="playerCount"
                       style={{ fontFamily: 'Abril Fatface' }}

@@ -25,6 +25,8 @@ import Gs from './notes/Gs.mp3'
 
 import { sendUpdate } from './networking'
 import Constants from './shared/constants'
+import { useNavigate } from 'react-router-dom'
+import Session from 'react-session-api'
 
 const numKeys = 6
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
