@@ -1,9 +1,8 @@
 const Constants = require('../src/shared/constants');
 const Player = require('./player');
-
 class Game {
 
-  constructor(host, gameId, socket) {
+  constructor(host, gameId, gameSocket) {
     this.players = {} //maps player name to player object
     this.host = host
     
@@ -13,9 +12,7 @@ class Game {
 //     this.lastUpdateTime = Date.now();
 //     this.shouldSendUpdate = false;
     this.gameId = gameId
-    this.socket = socket
-    console.log("in constructor ")
-
+    this.gameSocket = gameSocket
     this.socketIdToUsername = {}
 
     // Generate a random song with 6 notes
@@ -25,8 +22,6 @@ class Game {
   start() {
     // Set timer to call update method 60 times / second 
     setInterval(this.update.bind(this), 1000 / 60);
-
-    this.socket.to(this.gameId).emit(Constants.MSG_TYPES.START_GAME)
   }
 
   addPlayer(username, character, socketId) {
@@ -40,7 +35,6 @@ class Game {
     console.log(this.players)
     console.log(this.socketIdToUsername)
     if (socketId in this.socketIdToUsername) {
-      console.log("found a match!")
       delete this.players[this.socketIdToUsername[socketId]]
       delete this.socketIdToUsername[socketId]
       return true
@@ -66,18 +60,27 @@ class Game {
     // })
 
     // Send a game update to each player 
-    this.socket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate())
+    this.gameSocket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, this.createGameWithoutSocket())
   }
 
   // Create update to send to the client
-  createUpdate() {
+  /*createUpdate() {
     return {
-      players: this.players.map(p => p.serializeForUpdate()),
+      players: this.players.map((name, playerObj) => p.serializeForUpdate()),
       host: this.host,
       gameId: this.gameId
     }
   }
-
+*/
+  createGameWithoutSocket() {
+    return {
+      players: this.players,
+      host: this.host,
+      gameId: this.gameId,
+      socketIdToUsername: this.socketIdToUsername,
+      song: this.song
+    }
+  }
 }
 
 module.exports = Game

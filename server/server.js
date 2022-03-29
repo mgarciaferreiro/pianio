@@ -20,9 +20,9 @@ io.on('connection', socket => {
   // TODO: register the other functions
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
     joinGame(username, gameId, socket));
-  socket.on(Constants.MSG_TYPES.GAME_UPDATE, (username, position, gameId) => 
+  socket.on(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, (username, position, gameId) => 
     updateGame(username, position, gameId, socket));
-  // socket.on(Constants.MSG_TYPES.START_GAME, startGame);
+  socket.on(Constants.MSG_TYPES.START_GAME_REQUEST, (gameId) => startGame(gameId, socket));
   // socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
   // socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
 
@@ -47,7 +47,7 @@ function onDisconnect(socket) {
     console.log([gid, g])
     if (g.removePlayer(socket.id)) {
       console.log('removed player')
-      socket.to(gid).emit(Constants.MSG_TYPES.GAME_UPDATE, game);
+      socket.to(gid).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket());
     }
   }
 }
@@ -66,13 +66,6 @@ function generateGameId() {
 
 function createGame(hostName, socket) {
   console.log('Creating game ' + hostName)
-  // let gameId = (Math.floor(Math.random() * 100000 + 1));
-  
-  // while (gameId.toString() in games) {
-  //   gameId++;
-  // }
-
-  // gameId = gameId.toString();
 
   gameId = generateGameId()
 
@@ -80,7 +73,7 @@ function createGame(hostName, socket) {
     gameId = generateGameId()
   }
 
-  const game = new Game(hostName, gameId, socket.id);
+  const game = new Game(hostName, gameId, socket);
   game.addPlayer(hostName, null, socket.id)
 
   games[gameId] = game;
@@ -88,7 +81,7 @@ function createGame(hostName, socket) {
 
   console.log(hostName + ' created game ' + gameId);
   console.log(game)
-  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game); //emit to client
+  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket()); //emit to client
 }
 
 // TODO: test and add back these functions
@@ -101,9 +94,9 @@ function joinGame(username, gameId, socket) {
     game = games[gameId];
     console.log(socket)
     game.addPlayer(username, null, socket.id);
-    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game); 
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game.createGameWithoutSocket()); 
     socket.join(gameId);
-    socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game); //emit to client
+    socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game.createGameWithoutSocket()); //emit to client
 
     //emit to client
   }
@@ -113,14 +106,17 @@ function updateGame(username, position, gameId, socket) {
   console.log('Updating game ' + gameId + username + position)
   game = games[gameId];
   game.setPosition(username, position)
-  socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE, game); //emit to client
+  socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket()); //emit to client
 }
 
-// function startGame(gameId) {
-//   this.to(gameId).emit(Constants.MSG_TYPES.START_GAME);
-//   const game = games[gameId];
-//   game.start();
-// }
+function startGame(gameId, socket) {
+  console.log('Starting game ' + gameId)
+  const game = games[gameId];
+  game.start();
+  socket.emit(Constants.MSG_TYPES.START_GAME_RESPONSE)
+  socket.to(gameId).emit(Constants.MSG_TYPES.START_GAME_RESPONSE);
+}
+
 
 // function restartGame(gameId) {
 //   this.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME);
