@@ -48,8 +48,8 @@ function Home({name, setName}) {
     if(lobbyCode.length !== 4) {
       setErrorMessage("Lobby code must be 4 characters")
     } else {
+      joinGame(name, lobbyCode)
       setErrorMessage("")
-
     }
   }
 
@@ -96,18 +96,17 @@ function Home({name, setName}) {
 
       {loggedIn && (
         <div>
-          <Link to="/lobby">
             <button className="join" onClick={() => createGame(name)}>
               Create a Room
             </button>
-          </Link>
           {/* TODO: change hardcoded game ID, and combine joinGame and toggleJoiningRoom */}
             <button className="join" onClick={() => toggleJoiningRoom()}>Find a Room</button>
-           {/* <Link to="/lobby">
+          {/* </Link> */}
+           {/*<Link to="/lobby">
              <button className="join" onClick={() => joinGame(name, '123')}>
                Join a Room
              </button>
-           </Link> */}
+      </Link>*/}
         </div>
       )}
 
