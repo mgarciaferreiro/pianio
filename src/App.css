@@ -157,6 +157,28 @@ li {
   color: white;
   border: none;
 }
+
+.backButton {
+  background: #9c1903;
+  height:42px;
+  width: 100px;
+  margin-top: 10%;
+  margin-left:5px;
+  border-radius: 3px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+}
+
+.backButton:hover {
+  background: #851603;
+
+  transition: .5s;
+
+}
 .startGame {
   margin: 0 auto;
   display: block;
@@ -174,12 +196,12 @@ li {
 }
 
 .startGame:hover {
-  filter: brightness(90%);
+  filter: brightness(80%);
   transition: .5s;
 }
 
 .play:hover {
-  filter: brightness(90%);
+  filter: brightness(80%);
   transition: .5s;
 }
 .join {
@@ -200,7 +222,12 @@ li {
 }
 
 .join:hover {
-  filter: brightness(90%);
+  filter: brightness(80%);
+  transition: .5s;
+}
+
+.joinRoom:hover {
+  filter: brightness(80%);
   transition: .5s;
 }
 
@@ -225,7 +252,7 @@ li {
   /* background-color: red; */
 }
 .numPlayerBtn:hover {
-  filter: brightness(90%);
+  filter: brightness(80%);
   transition: .5s;
 }
 
