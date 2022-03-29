@@ -21,3 +21,7 @@ export const startGame = (gameId) => {
   console.log('sending start game request ' + gameId);
   socket.emit(Constants.MSG_TYPES.START_GAME_REQUEST, gameId)
 }
+
+export const leaveLobby = () => {
+  socket.emit(Constants.MSG_TYPES.LEAVE_LOBBY_REQUEST)
+}

@@ -23,6 +23,7 @@ module.exports = Object.freeze({
       PLAYER_JOINED_SESSION: 'player_joined_session',
       DISCONNECT: 'disconnect',
       GET_OVERALL_LEADERBOARD: 'get_overall_leaderboard',
-      FINISH_GAME: 'finish_game'
+      FINISH_GAME: 'finish_game',
+      LEAVE_LOBBY_REQUEST: 'leave_lobby_request'
     },
 });

@@ -23,6 +23,8 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, (username, position, gameId) => 
     updateGame(username, position, gameId, socket));
   socket.on(Constants.MSG_TYPES.START_GAME_REQUEST, (gameId) => startGame(gameId, socket));
+  socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_REQUEST, () =>
+    onDisconnect(socket));
   // socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
   // socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
 
@@ -47,14 +49,14 @@ function onDisconnect(socket) {
     console.log([gid, g])
     if (g.removePlayer(socket.id)) {
       console.log('removed player')
-      socket.to(gid).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket());
+      socket.to(gid).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, g.createGameWithoutSocket());
     }
   }
 }
 
 function generateGameId() {
     var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
     var charactersLength = characters.length;
 
     for (var i = 0; i < 4; i++) {
