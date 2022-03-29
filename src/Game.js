@@ -18,10 +18,12 @@ const letters = ['D', 'F', 'G', 'H', 'J', 'K']
 
 const getSongArray = song => {
   const songArray = Array(Constants.SONG_LENGTH).fill().map(() => Array(numKeys).fill(0))
+
   for (let i = 0; i < Constants.SONG_LENGTH; i++) {
     let blackTileIndex = song[i]
     songArray[i][blackTileIndex] = 1
   }
+
   return songArray
 }
 

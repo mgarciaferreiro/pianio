@@ -2,7 +2,7 @@ import logo from './logo.svg'
 import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
-import React, { useState, useEffect } from 'react'\
+import React, { useState, useEffect } from 'react'
 import Constants from './shared/constants';
 import { createGame, joinGame } from './networking';
 import { socket } from './App'
@@ -11,10 +11,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
-  const [gameId, setGameId] = useState('')]
+  const [gameId, setGameId] = useState('')
   
   const [joiningRoom, setJoiningRoom] = useState(false)
-  const [lobbyCode, setLobbyCode] = useState('')]
+  const [lobbyCode, setLobbyCode] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
 
