@@ -20,6 +20,7 @@
     "rsuite": "^5.2.3",
     "socket.io": "^4.4.1",
     "socket.io-client": "4.4.0",
+    "use-sound": "^4.0.1",
     "web-vitals": "^1.0.1",
     "webfontloader": "^1.6.28"
   },

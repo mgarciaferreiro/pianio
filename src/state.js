@@ -1,16 +1,51 @@
 
-// TODO: implement state
+// let username = null
+// let gameId = null
+// let players = {}
+// let positions = {}
 
-let state = null;
+// export function getUsername() {
+//     return username
+// }
 
-export function initState() {
-    state = {};
-}
+// export function setUsername(name) {
+//     username = name
+// }
 
-export function processGameUpdate(update) {
-    state = update;
-}
+// export function getGameId() {
+//     return gameId
+// }
 
-export function getCurrentState() {
-    return state;
-}
+// export function setGameId(id) {
+//     gameId = id
+// }
+
+// // export function addPlayer(name) {
+// //     players.push(name)
+// // }
+
+// export function setPlayers(players) {
+//     this.players = players
+// }
+
+// export function getPlayers() {
+//     return players
+// }
+
+// export function initPositions() {
+//     players.map(name => (
+//         positions[name] = 0
+//     ))
+// }
+
+// export function updatePosition(name, position) {
+//     positions[name] = position
+// }
+
+// export function getPosition(name) {
+//     return positions[name];
+// }
+
+// export function getPositions() {
+//     return positions;
+// }

@@ -8,11 +8,13 @@ import { createGame, joinGame } from './networking';
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
-function Home() {
-  const [name, setName] = useState('')
+function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
   const [gameId, setGameId] = useState('')
+//  const [joiningRoom, setJoiningRoom] = useState(false)
+//  const [lobbyCode, setLobbyCode] = useState('')
+
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
 
@@ -28,24 +30,28 @@ function Home() {
     }
   }
 
-  const clickJoin = () => {
-    console.log('clicked join, game id')
+  const toggleJoiningRoom = () => {
+    setJoiningRoom(!joiningRoom)
+    setLoggedIn(!loggedIn)
+  }
 
-    if (gameId === '') {
-      setErrorMessage('GameId cannot be empty!')
+  const joinRoom = () => {
+    console.log(gameId)
+    if(gameId.length !== 4) {
+      setErrorMessage("Lobby code must be 4 characters")
+    } else {
+      setErrorMessage("")
+      joinGame(name, gameId)
     }
-
-    joinGame(name, gameId)
   }
 
   useEffect(() => {
     socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
       console.log("IN SOCKET ENDPT CLIENT JOIN")
       if (res.status == 'success') {
-        console.log('client join success')
-        
+        return Lobby
       } else {
-        console.log('client join fail')
+        return Lobby
       }
     });
     WebFont.load({
@@ -62,7 +68,7 @@ function Home() {
         peean.io
       </p>
       <p className="blurb">race to play piano tiles with your keyboard</p>
-      {!loggedIn && (
+      {(!loggedIn && !joiningRoom)&& (
         <div>
           <input
             placeholder="Nickname"
@@ -84,19 +90,37 @@ function Home() {
               Create a Room
             </button>
           </Link>
-          
-          <button className="join" onClick={() => clickJoin()}>
-            Join a Game
-          </button>
-          <input
-            placeholder="Game ID"
-            className="joinGame"
-            onChange={e => {
-              setGameId(e.target.value)
-            }}
-          ></input>
+          {/* TODO: change hardcoded game ID, and combine joinGame and toggleJoiningRoom */}
 
+          {/* <Link to="/lobby"> */}
+            <button className="join" onClick={() => toggleJoiningRoom()}>Find a Room</button>
+          {/* </Link> */}
+//           <Link to="/lobby">
+//             <button className="join" onClick={() => joinGame(name, '123')}>
+//               Join a Room
+//             </button>
+//           </Link>
         </div>
+      )}
+
+{joiningRoom && (
+        <div>
+        <input
+          placeholder="4 Character Lobby Code"
+          className="addName"
+          onChange={e => {
+            setGameId(e.target.value)
+          }}
+        ></input>
+        <button className="joinRoom" onClick={() => joinRoom()}>
+          Join Room
+        </button>
+        <Link to="/lobby">
+            <button className="joinRoom" onClick={() => createGame(name)}>
+              Join Random Room
+            </button>
+          </Link>
+      </div>
       )}
 
       <p className="error">{errorMessage}</p>
