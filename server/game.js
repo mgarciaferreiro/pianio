@@ -2,90 +2,67 @@ const Constants = require('../src/shared/constants');
 const Player = require('./player');
 
 class Game {
-  constructor(host) {
-    this.sockets = {}; //maps socket id to socket
-    this.players = {}; //maps socket id to player object
+
+  constructor(host, gameId, socket) {
+    this.players = {} //maps player name to player object
     this.host = host
     
-    // Generate a random song with 5 notes
-    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
-    console.log(this.song)
-    this.lastUpdateTime = Date.now();
-    this.shouldSendUpdate = false;
+//     // Generate a random song with 5 notes
+//     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
+//     console.log(this.song)
+//     this.lastUpdateTime = Date.now();
+//     this.shouldSendUpdate = false;
+    this.gameId = gameId
+    this.socket = socket
+
+    // Generate a random song with 6 notes
+    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
   }
 
   start() {
     // Set timer to call update method 60 times / second 
     setInterval(this.update.bind(this), 1000 / 60);
 
-    // Set every player's position to 0 and notify them of game start
-    Object.keys(this.sockets).forEach(playerID => {
-      const player = this.players[playerID];
-      player.setPosition(0)
-
-      const socket = this.sockets[playerID];
-      socket.emit(Constants.MSG_TYPES.START_GAME);
-    });
+    this.socket.to(this.gameId).emit(Constants.MSG_TYPES.START_GAME)
   }
 
-  addPlayer(socket, username) {
-    this.sockets[socket.id] = socket;
-    this.players[socket.id] = new Player(socket.id, username);
+  addPlayer(username, character) {
+    this.players[username] = new Player(username, character)
   }
 
-  removePlayer(socket) {
-    delete this.sockets[socket.id];
-    delete this.players[socket.id];
+  removePlayer(username) {
+    this.players[username] = null
+  }
+
+  setPosition(username, position) {
+    const player = this.players[username]
+    player.setPosition(position)
+    this.players[username] = player
   }
 
   update() {
-    // Calculate time elapsed
-    const now = Date.now();
-    const dt = (now - this.lastUpdateTime) / 1000;
-    this.lastUpdateTime = now;
 
-    // Check if any players have lost or won
-    Object.keys(this.sockets).forEach(playerID => {
-      const socket = this.sockets[playerID];
-      const player = this.players[playerID];
-      if (player.hasLost) {
-        socket.emit(Constants.MSG_TYPES.GAME_LOST);
-        this.removePlayer(socket);
-      }
-      if (player.hasWon) {
-        socket.emit(Constants.MSG_TYPES.GAME_WON);
-        this.removePlayer(socket);
-      }
-    });
+    // TODO: Check if any players have won
+    // this.players.forEach((player, i) => {
+    //   if (player.isFinished) {
+    //     socket.emit(Constants.MSG_TYPES.GAME_WON);
+    //     this.removePlayer(socket);
+    //   }
+    // })
 
     // Send a game update to each player 
-    if (this.shouldSendUpdate) {
-        Object.keys(this.sockets).forEach(playerID => {
-            const socket = this.sockets[playerID];
-            const player = this.players[playerID];
-            socket.emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(player, leaderboard));
-          });
-        this.shouldSendUpdate = false;
-    }
-
-  }
-
-  getLeaderboard() {
-    return Object.values(this.players)
-      .sort((p1, p2) => p2.score - p1.score)
-      .map(p => ({ username: p.username, score: Math.round(p.score) }));
+    this.socket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate())
   }
 
   // Create update to send to the client
-  createUpdate(player, leaderboard) {
+  createUpdate() {
     return {
-      t: Date.now(),
-      me: player.serializeForUpdate(),
-      others: this.players.map(p => p.serializeForUpdate()),
-      leaderboard
-    };
+      players: this.players.map(p => p.serializeForUpdate()),
+      host: this.host,
+      gameId: this.gameId
+    }
   }
 
 }
 
-module.exports = Game;
+module.exports = Game

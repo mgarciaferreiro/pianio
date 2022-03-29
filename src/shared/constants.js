@@ -7,7 +7,6 @@ module.exports = Object.freeze({
       JOIN_GAME_SUCCESS: 'join_game_success',
       JOIN_GAME_FAILURE: 'join_game_failure',
       GAME_UPDATE: 'update',
-      GAME_LOST: 'lost',
       GAME_WON: 'won',
       CREATE_GAME_REQUEST: 'create_game',
       CREATE_GAME_SUCCESS: 'create_game_success',

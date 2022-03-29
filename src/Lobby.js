@@ -2,10 +2,12 @@ import logo from './logo.svg'
 import './App.css'
 import WebFont from 'webfontloader'
 import React, { useState, useEffect } from 'react'
-import waitingGif from './waiting.gif'
-import waitingGif2 from './waiting2.gif'
-import waitingGif3 from './waiting3.gif'
-import waitingGif4 from './waiting4.gif'
+import minnie from './gifs/minnie.gif'
+import mickey from './gifs/mickey.gif'
+import donald from './gifs/donald.gif'
+import goofy from './gifs/goofy.gif'
+import tom from './gifs/tom.gif'
+import berlioz from './gifs/berlioz.gif'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Lobby() {
@@ -22,6 +24,9 @@ function Lobby() {
     // {"name" : "", "picture" : "", "joined" : "none"},
   ])
 
+const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
+
+function Lobby({gameState}) {
   useEffect(() => {
     WebFont.load({
       google: {
@@ -48,6 +53,27 @@ function Lobby() {
         <Link to="/">
           <button className="startGame">Leave Lobby</button>
         </Link>
+       <div className="flex-container">
+//         {gameState != null ? Object.keys(gameState.players).map((player, i) => 
+//           <div key={player} className={"player1"}>
+//             <img className="waitingGif" src={gifs[i]} alt="waiting" />
+//             <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
+//               {player}
+//             </h3>
+//           </div>
+//         ) : null}
+//         {/* <div className="player1">
+//           <img className="waitingGif" src={minnie} alt="waiting" />
+//           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
+//             Andri
+//           </h3>
+//         </div>
+
+//         <div className="player2">
+//           <img className="waitingGif" src={mickey} alt="waiting" />
+//           <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
+//             Amy
+//           </h3>
         </div>
       )}
 
@@ -96,6 +122,7 @@ function Lobby() {
           )
         }
       })}
+
     </div>
   )
 }
