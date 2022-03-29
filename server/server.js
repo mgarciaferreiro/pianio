@@ -17,7 +17,9 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket));
   socket.on(Constants.MSG_TYPES.DISCONNECT, onDisconnect);
   // TODO: register the other functions
-  // socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, joinGame);
+  socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => {
+    joinGame(username, gameId, socket)
+  });
   // socket.on(Constants.MSG_TYPES.START_GAME, startGame);
   // socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
   // socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
@@ -63,18 +65,26 @@ function createGame(hostName, socket) {
 // TODO: test and add back these functions
 
 
-// function joinGame(username, gameId) {
-//   if (!(gameId in games)) {
-//     this.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
-//   } else {
-//     game = games[gameId];
-//     game.addPlayer(username);
-//     this.join(gameId);
-//     this.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION); //emit to client
+function joinGame(username, gameId, socket) {
+  console.log('Joining game ' + username + ' ' + gameId)
+  console.log(socket)
 
-//     this.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS); //emit to client
-//   }
-// }
+  if (!(gameId in games)) {
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, {
+      status : 'failure'
+    }); 
+  } else {
+    game = games[gameId];
+    game.addPlayer(username);
+    socket.join(gameId);
+    //socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION); 
+
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, {
+      status : 'success'
+    }); 
+    console.log('JOIN GAME SUCCESS!!!!')
+  }
+ }
 
 // function startGame(gameId) {
 //   this.to(gameId).emit(Constants.MSG_TYPES.START_GAME);

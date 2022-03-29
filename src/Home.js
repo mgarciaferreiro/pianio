@@ -3,12 +3,16 @@ import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
-import { createGame } from './networking';
+import Constants from './shared/constants';
+import { createGame, joinGame } from './networking';
+import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 function Home() {
   const [name, setName] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
+  const [clickedJoin, setClickedJoin] = useState(false)
+  const [gameId, setGameId] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
 
@@ -24,7 +28,26 @@ function Home() {
     }
   }
 
+  const clickJoin = () => {
+    console.log('clicked join, game id')
+
+    if (gameId === '') {
+      setErrorMessage('GameId cannot be empty!')
+    }
+
+    joinGame(name, gameId)
+  }
+
   useEffect(() => {
+    socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
+      console.log("IN SOCKET ENDPT CLIENT JOIN")
+      if (res.status == 'success') {
+        console.log('client join success')
+        
+      } else {
+        console.log('client join fail')
+      }
+    });
     WebFont.load({
       google: {
         families: ['Abril Fatface', 'GFS Didot', 'Antic Didone'],
@@ -61,9 +84,18 @@ function Home() {
               Create a Room
             </button>
           </Link>
-          <Link to="/lobby">
-            <button className="join">Join a Room</button>
-          </Link>
+          
+          <button className="join" onClick={() => clickJoin()}>
+            Join a Game
+          </button>
+          <input
+            placeholder="Game ID"
+            className="joinGame"
+            onChange={e => {
+              setGameId(e.target.value)
+            }}
+          ></input>
+
         </div>
       )}
 

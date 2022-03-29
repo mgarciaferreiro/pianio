@@ -9,6 +9,13 @@ export const createGame = (hostName) => {
   socket.emit(Constants.MSG_TYPES.CREATE_GAME_REQUEST, hostName);
 }
 
+export const joinGame = (username, gameId) => {
+  console.log('joining game ' + username.toString() + ' ' + gameId.toString())
+  
+
+  socket.emit(Constants.MSG_TYPES.JOIN_GAME_REQUEST, username, gameId)
+}
+
 // export const play = username => {
 //   socket.emit(Constants.MSG_TYPES.JOIN_GAME_REQUEST, username);
 // };
