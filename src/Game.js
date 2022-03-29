@@ -59,7 +59,7 @@ function Game({gameState, song, name}) {
     const [seconds, setSeconds] = useState(0)
     const [isActive, setIsActive] = useState(true)
     // console.log(board)
-
+    
     useEffect(() => {
       // Start timer
       let interval = null;
@@ -90,6 +90,7 @@ function Game({gameState, song, name}) {
             sendUpdate(name, position + 1, gameState.gameId)
             setPosition(position + 1)
         } else {
+            setSeconds(seconds+10)
             setHasLost(true)
         }
     }
@@ -169,8 +170,12 @@ function Game({gameState, song, name}) {
         play_Gs()
       } 
     }
-    
+    let navigate = useNavigate();
+
     useEffect(() => {
+      if(Session.get("Name") === undefined) {
+        navigate('/')
+      }
         document.addEventListener("keydown", handleKeyPress)
         return () => {
           document.removeEventListener("keydown", handleKeyPress)

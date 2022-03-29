@@ -15,7 +15,8 @@ io.on('connection', socket => {
   });
 
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket));
-  socket.on(Constants.MSG_TYPES.DISCONNECT, onDisconnect);
+  socket.on(Constants.MSG_TYPES.DISCONNECT, () => 
+    onDisconnect(socket));
   // TODO: register the other functions
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
     joinGame(username, gameId, socket));
@@ -37,11 +38,31 @@ setInterval(() => {
 
 const games = {} // maps gameId to game objects
 
-function onDisconnect() {
+function onDisconnect(socket) {
   // this = socket
   console.log(`disconnect: ${this.id}`);
   // TODO: remove the player from the game
+  console.log(games)
+  for (const [gid, g] of Object.entries(games)) {
+    console.log([gid, g])
+    if (g.removePlayer(socket.id)) {
+      console.log('removed player')
+      socket.to(gid).emit(Constants.MSG_TYPES.GAME_UPDATE, game);
+    }
+  }
 }
+
+function generateGameId() {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var charactersLength = characters.length;
+
+    for (var i = 0; i < 4; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
 
 function createGame(hostName, socket) {
   console.log('Creating game ' + hostName)
@@ -53,11 +74,14 @@ function createGame(hostName, socket) {
 
   // gameId = gameId.toString();
 
-  /* TODO: remove hardcoded game ID */
-  gameId = '123'
+  gameId = generateGameId()
 
-  const game = new Game(hostName, gameId);
-  game.addPlayer(hostName)
+  while (gameId in games) {
+    gameId = generateGameId()
+  }
+
+  const game = new Game(hostName, gameId, socket.id);
+  game.addPlayer(hostName, null, socket.id)
 
   games[gameId] = game;
   socket.join(gameId);
@@ -75,12 +99,13 @@ function joinGame(username, gameId, socket) {
     socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
   } else {
     game = games[gameId];
-    console.log(game)
-    game.addPlayer(username);
+    console.log(socket)
+    game.addPlayer(username, null, socket.id);
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game); 
     socket.join(gameId);
     socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game); //emit to client
 
-    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game); //emit to client
+    //emit to client
   }
 }
 

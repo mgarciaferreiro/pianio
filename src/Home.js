@@ -7,16 +7,24 @@ import Constants from './shared/constants';
 import { createGame, joinGame } from './networking';
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { useCookies } from 'react-cookie';
+import Session from 'react-session-api'
 
 function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
   const [gameId, setGameId] = useState('')
-  
+  // const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+  const [cookies, setCookie] = useCookies(['user']);
+
   const [joiningRoom, setJoiningRoom] = useState(false)
   const [lobbyCode, setLobbyCode] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
+
+  const handleCookies = () => {
+    setCookie('Name', name, { path: '/' });
+ };
 
   const checkName = () => {
     console.log(filter.check(name))
@@ -27,6 +35,8 @@ function Home({name, setName}) {
     } else {
       setErrorMessage('')
       setLoggedIn(!loggedIn)
+      handleCookies()
+      Session.set("Name", name);
     }
   }
 
@@ -40,12 +50,15 @@ function Home({name, setName}) {
     if(lobbyCode.length !== 4) {
       setErrorMessage("Lobby code must be 4 characters")
     } else {
+      joinGame(name, lobbyCode)
       setErrorMessage("")
-
     }
   }
 
   useEffect(() => {
+    console.log(Session.get("Name"))
+
+    setName(cookies.Name)
     socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
       console.log("IN SOCKET ENDPT CLIENT JOIN")
       if (res.status == 'success') {
@@ -73,6 +86,7 @@ function Home({name, setName}) {
         <div>
           <input
             placeholder="Nickname"
+            value={name}
             className="addName"
             onChange={e => {
               setName(e.target.value)
@@ -86,18 +100,17 @@ function Home({name, setName}) {
 
       {loggedIn && (
         <div>
-          <Link to="/lobby">
             <button className="join" onClick={() => createGame(name)}>
               Create a Room
             </button>
-          </Link>
           {/* TODO: change hardcoded game ID, and combine joinGame and toggleJoiningRoom */}
             <button className="join" onClick={() => toggleJoiningRoom()}>Find a Room</button>
-           {/* <Link to="/lobby">
+          {/* </Link> */}
+           {/*<Link to="/lobby">
              <button className="join" onClick={() => joinGame(name, '123')}>
                Join a Room
              </button>
-           </Link> */}
+      </Link>*/}
         </div>
       )}
 
