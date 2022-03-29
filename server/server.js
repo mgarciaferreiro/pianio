@@ -69,7 +69,6 @@ function createGame(hostName, socket) {
 
 // TODO: test and add back these functions
 
-
 function joinGame(username, gameId, socket) {
   console.log('Joining game ' + gameId + username)
   if (!(gameId in games)) {
