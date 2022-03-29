@@ -4,8 +4,7 @@ module.exports = Object.freeze({
     MAP_SIZE: 3000,
     MSG_TYPES: {
       JOIN_GAME_REQUEST: 'join_game',
-      JOIN_GAME_SUCCESS: 'join_game_success',
-      JOIN_GAME_FAILURE: 'join_game_failure',
+      JOIN_GAME_RESPONSE: 'join_game_response',
       GAME_UPDATE: 'update',
       GAME_WON: 'won',
       CREATE_GAME_REQUEST: 'create_game',
