@@ -56,7 +56,6 @@ function Game({gameState, song, name}) {
       }
       return () => clearInterval(interval);
     }, [isActive, seconds]);
-
   
     const handleKeyPress = (event) => {
         const tilePressed = letters.indexOf(event.key.toUpperCase())
@@ -76,7 +75,6 @@ function Game({gameState, song, name}) {
             setHasLost(true)
         }
     }
-
     const [play_A] = useSound(A_Note);
     const [play_B] = useSound(B_Note);
     const [play_C] = useSound(C_Note);
@@ -84,7 +82,6 @@ function Game({gameState, song, name}) {
     const [play_E] = useSound(E_Note);
     const [play_F] = useSound(F_Note);
     const [play_G] = useSound(G_Note);
-
     // plays a randoA_Notem key
     function playNote() {
       const notes = ["A_Note", "B_Note", "C_Note","D_Note","E_Note","F_Note", "G_Note"]
@@ -112,9 +109,7 @@ function Game({gameState, song, name}) {
           document.removeEventListener("keydown", handleKeyPress)
         }
     }, [handleKeyPress])
-
     return (
-
       <div>
         {hasWon && <Victory time = {Number(seconds / 10).toFixed(1)} />}
         {!hasWon &&
