@@ -2,7 +2,7 @@ import logo from './logo.svg'
 import './App.css'
 import WebFont from 'webfontloader'
 import Lobby from './Lobby'
-import React, { useState, useEffect } from 'react'\
+import React, { useState, useEffect } from 'react'
 import Constants from './shared/constants';
 import { createGame, joinGame } from './networking';
 import { socket } from './App'
@@ -11,10 +11,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
-  const [gameId, setGameId] = useState('')]
+  const [gameId, setGameId] = useState('')
   
   const [joiningRoom, setJoiningRoom] = useState(false)
-  const [lobbyCode, setLobbyCode] = useState('')]
+  const [lobbyCode, setLobbyCode] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
 
@@ -40,8 +40,8 @@ function Home({name, setName}) {
     if(lobbyCode.length !== 4) {
       setErrorMessage("Lobby code must be 4 characters")
     } else {
+      joinGame(name, lobbyCode)
       setErrorMessage("")
-
     }
   }
 
@@ -86,21 +86,19 @@ function Home({name, setName}) {
 
       {loggedIn && (
         <div>
-          <Link to="/lobby">
             <button className="join" onClick={() => createGame(name)}>
               Create a Room
             </button>
-          </Link>
           {/* TODO: change hardcoded game ID, and combine joinGame and toggleJoiningRoom */}
 
           {/* <Link to="/lobby"> */}
             <button className="join" onClick={() => toggleJoiningRoom()}>Find a Room</button>
           {/* </Link> */}
-//           <Link to="/lobby">
-//             <button className="join" onClick={() => joinGame(name, '123')}>
-//               Join a Room
-//             </button>
-//           </Link>
+           {/*<Link to="/lobby">
+             <button className="join" onClick={() => joinGame(name, '123')}>
+               Join a Room
+             </button>
+      </Link>*/}
         </div>
       )}
 

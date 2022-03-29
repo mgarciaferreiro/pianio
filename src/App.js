@@ -4,13 +4,13 @@ import Home from './Home'
 import Game from './Game'
 import io from 'socket.io-client';
 import Constants from './shared/constants';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 
 export const socket = io('localhost:3001');
 
 function App() {
-
+  let navigate = useNavigate()
   const [isConnected, setIsConnected] = useState(socket.connected)
   const [gameState, setGameState] = useState(null)
   const [song, setSong] = useState([])
@@ -25,8 +25,10 @@ function App() {
     });
     socket.on(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game => {
       console.log('Created game with ID ' + game.gameId)
+      console.log(game)
       setGameState(game)
       setSong(Array.from(game.song))
+      navigate('/Lobby')
     });
     socket.on(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game => {
       console.log('Player joined game ' + game.gameId)
@@ -36,6 +38,7 @@ function App() {
       console.log('Joined game successfully')
       setGameState(game)
       setSong(game.song)
+      navigate('/Lobby')
     });
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, game => {
       console.log('Received game update');
@@ -59,7 +62,7 @@ function App() {
       </header> */}
       <Routes>
         <Route path="/" element={<Home name={name} setName={setName}/>} />
-        <Route path="/lobby" element={<Lobby gameState={gameState}/>} />
+        <Route path="/lobby" element={<Lobby gameState={gameState} name={name}/>} />
         <Route path="/game" element={<Game gameState={gameState} song={song} name={name}/>} />
       </Routes>
     </div>

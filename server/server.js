@@ -43,6 +43,18 @@ function onDisconnect() {
   // TODO: remove the player from the game
 }
 
+function generateGameId() {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+
+    for (var i = 0; i < 4; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
+
 function createGame(hostName, socket) {
   console.log('Creating game ' + hostName)
   // let gameId = (Math.floor(Math.random() * 100000 + 1));
@@ -54,7 +66,7 @@ function createGame(hostName, socket) {
   // gameId = gameId.toString();
 
   /* TODO: remove hardcoded game ID */
-  gameId = '123'
+  gameId = generateGameId()
 
   const game = new Game(hostName, gameId);
   game.addPlayer(hostName)
@@ -77,10 +89,11 @@ function joinGame(username, gameId, socket) {
     game = games[gameId];
     console.log(game)
     game.addPlayer(username);
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game); 
     socket.join(gameId);
     socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game); //emit to client
 
-    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game); //emit to client
+    //emit to client
   }
 }
 
