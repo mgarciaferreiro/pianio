@@ -74,6 +74,7 @@ function Game({gameState, song, name}) {
             sendUpdate(name, position + 1, gameState.gameId)
             setPosition(position + 1)
         } else {
+            setSeconds(seconds+10)
             setHasLost(true)
         }
     }
@@ -84,7 +85,7 @@ function Game({gameState, song, name}) {
     const [play_E] = useSound(E_Note);
     const [play_F] = useSound(F_Note);
     const [play_G] = useSound(G_Note);
-    // plays a randoA_Notem key
+    // plays a random key
     function playNote() {
       const notes = ["A_Note", "B_Note", "C_Note","D_Note","E_Note","F_Note", "G_Note"]
       const randomNote = notes[Math.floor(Math.random() * notes.length)]
@@ -148,18 +149,6 @@ function Game({gameState, song, name}) {
               </div>
             ))}
           </div>
-          <audio id="C" src="http://www.vibrationdata.com/piano_middle_C.mp3"></audio>
-          <audio id="Db" src="http://www.vibrationdata.com/piano_C_sharp.mp3"></audio>
-          <audio id="D" src="http://www.vibrationdata.com/piano_D.mp3"></audio>
-          <audio id="Eb" src="http://www.vibrationdata.com/piano_D_sharp.mp3"></audio>
-          <audio id="E" src="http://www.vibrationdata.com/piano_E.mp3"></audio>
-          <audio id="F" src="http://www.vibrationdata.com/piano_F.mp3"></audio>
-          <audio id="Gb" src="http://www.vibrationdata.com/piano_F_sharp.mp3"></audio>
-          <audio id="G" src="http://www.vibrationdata.com/piano_G.mp3"></audio>
-          <audio id="Ab" src="http://www.vibrationdata.com/piano_G_sharp.mp3"></audio>
-          <audio id="A" src="http://www.vibrationdata.com/piano_A.mp3"></audio>
-          <audio id="Bb" src="http://www.vibrationdata.com/piano_A_sharp.mp3"></audio>
-          <audio id="B" src="http://www.vibrationdata.com/piano_B.mp3"></audio>
         </div>
         }
       </div>
