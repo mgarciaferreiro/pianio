@@ -9,6 +9,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 function Home() {
   const [name, setName] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
+  const [joiningRoom, setJoiningRoom] = useState(false)
+  const [lobbyCode, setLobbyCode] = useState('')
+
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
 
@@ -21,6 +24,21 @@ function Home() {
     } else {
       setErrorMessage('')
       setLoggedIn(!loggedIn)
+    }
+  }
+
+  const toggleJoiningRoom = () => {
+    setJoiningRoom(!joiningRoom)
+    setLoggedIn(!loggedIn)
+  }
+
+  const joinRoom = () => {
+    console.log(lobbyCode)
+    if(lobbyCode.length !== 4) {
+      setErrorMessage("Lobby code must be 4 characters")
+    } else {
+      setErrorMessage("")
+
     }
   }
 
@@ -39,7 +57,7 @@ function Home() {
         peean.io
       </p>
       <p className="blurb">race to play piano tiles with your keyboard</p>
-      {!loggedIn && (
+      {(!loggedIn && !joiningRoom)&& (
         <div>
           <input
             placeholder="Nickname"
@@ -61,10 +79,30 @@ function Home() {
               Create a Room
             </button>
           </Link>
-          <Link to="/lobby">
-            <button className="join">Join a Room</button>
-          </Link>
+          {/* <Link to="/lobby"> */}
+            <button className="join" onClick={() => toggleJoiningRoom()}>Find a Room</button>
+          {/* </Link> */}
         </div>
+      )}
+
+{joiningRoom && (
+        <div>
+        <input
+          placeholder="4 Character Lobby Code"
+          className="addName"
+          onChange={e => {
+            setLobbyCode(e.target.value)
+          }}
+        ></input>
+        <button className="joinRoom" onClick={() => joinRoom()}>
+          Join Room
+        </button>
+        <Link to="/lobby">
+            <button className="joinRoom" onClick={() => createGame(name)}>
+              Join Random Room
+            </button>
+          </Link>
+      </div>
       )}
 
       <p className="error">{errorMessage}</p>
