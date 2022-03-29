@@ -6,6 +6,7 @@ import io from 'socket.io-client';
 import Constants from './shared/constants';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
+import { CookiesProvider } from "react-cookie";
 
 export const socket = io('localhost:3001');
 
@@ -60,6 +61,8 @@ function App() {
   });
 
   return (
+    <CookiesProvider>
+
     <div>
       {/* <header className="App-header">
         <p>Connected: { '' + isConnected }</p>
@@ -70,6 +73,8 @@ function App() {
         <Route path="/game" element={<Game gameState={gameState} song={song} name={name}/>} />
       </Routes>
     </div>
+    </CookiesProvider>
+
   )
 }
 

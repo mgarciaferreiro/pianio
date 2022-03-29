@@ -8,21 +8,25 @@ import donald from './gifs/donald.gif'
 import goofy from './gifs/goofy.gif'
 import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
+import { useNavigate } from "react-router-dom";
+import Session from 'react-session-api'
+
+
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { startGame } from './networking'
 
 
 const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
-
 function Lobby({gameState, name}) {
-
   const clickedStartGame = () => {
     console.log(gameState.gameId)
     startGame(gameState.gameId)
   }
 
   useEffect(() => {
-
+    if(Session.get("Name") === undefined) {
+      navigate('/')
+    }
     WebFont.load({
       google: {
         families: ['Abril Fatface', 'GFS Didot', 'Antic Didone'],
@@ -32,7 +36,7 @@ function Lobby({gameState, name}) {
 
   return (
     <div>
-{
+{Session.get("Name") !== undefined &&
         <div>
         <br />
         <p className="lobbyName" style={{ fontFamily: 'Abril Fatface' }}>
