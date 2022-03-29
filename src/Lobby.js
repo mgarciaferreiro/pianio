@@ -14,7 +14,7 @@ const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
 
 // function Lobby({gameState}) {
 function Lobby({}) {
-  const [name, setName] = useState('Andri')
+  const [name, setName] = useState('Bandri')
   const [gameState, setGameState] = useState({
     players: [
       { name: 'Bandri', picture: 'minnie' },
