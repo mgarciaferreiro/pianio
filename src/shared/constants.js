@@ -1,5 +1,11 @@
 module.exports = Object.freeze({
     SONG_LENGTH: 40,
+    SONGS: {
+      // lengths respectively: 41, 25, 29
+      SONG1: ['C', 'C', 'G', 'G', 'A', 'A', 'G', 'F', 'F', 'E', 'E', 'D', 'D', 'C', 'G', 'G', 'F', 'F', 'E', 'E', 'D', 'G', 'G', 'F', 'F', 'E', 'E', 'D', 'C', 'G', 'G', 'A', 'A', 'G', 'F', 'F', 'E', 'E', 'D', 'D', 'C'],
+      SONG2: ['E', 'D', 'C', 'D', 'E', 'E', 'E', 'D', 'D', 'D', 'E', 'G', 'G', 'E', 'D', 'C', 'D', 'E', 'E', 'E', 'D', 'D', 'E', 'D', 'C'],
+      SONG3: ['C', 'D', 'E', 'C', 'C', 'D', 'E', 'C', 'E', 'F', 'G', 'E', 'F', 'G', 'G', 'A', 'G', 'F', 'E', 'C', 'G', 'A', 'G', 'F', 'E', 'C', 'C', 'G', 'C'],
+    },
     NUM_PLAYERS_MAX: 5,
     MAP_SIZE: 3000,
     MSG_TYPES: {
