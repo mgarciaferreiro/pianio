@@ -9,12 +9,13 @@ import goofy from './gifs/goofy.gif'
 import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { Cookies, useCookies } from 'react-cookie';
 
 const gifs = [minnie, mickey, donald, goofy, tom, berlioz]
 
 // function Lobby({gameState}) {
 function Lobby({}) {
-  const [name, setName] = useState('Bandri')
   const [gameState, setGameState] = useState({
     players: [
       { name: 'Bandri', picture: 'minnie' },
@@ -24,7 +25,17 @@ function Lobby({}) {
       { name: 'B', picture: 'goofy' },
     ],
   })
+  const [cookies, setCookie] = useCookies(['user']);
+
+  const [name, setName] = useState(cookies.Name)
+
+  let navigate = useNavigate();
+
   useEffect(() => {
+    console.log(cookies.Name)
+    if(name === undefined) {
+      navigate('/')
+    }
     WebFont.load({
       google: {
         families: ['Abril Fatface', 'GFS Didot', 'Antic Didone'],

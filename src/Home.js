@@ -7,16 +7,23 @@ import Constants from './shared/constants';
 import { createGame, joinGame } from './networking';
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { useCookies } from 'react-cookie';
 
 function Home({name, setName}) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
   const [gameId, setGameId] = useState('')
-  
+  // const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+  const [cookies, setCookie] = useCookies(['user']);
+
   const [joiningRoom, setJoiningRoom] = useState(false)
   const [lobbyCode, setLobbyCode] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const filter = require('leo-profanity')
+
+  const handleCookies = () => {
+    setCookie('Name', name, { path: '/' });
+ };
 
   const checkName = () => {
     console.log(filter.check(name))
@@ -27,6 +34,7 @@ function Home({name, setName}) {
     } else {
       setErrorMessage('')
       setLoggedIn(!loggedIn)
+      handleCookies()
     }
   }
 
@@ -46,6 +54,7 @@ function Home({name, setName}) {
   }
 
   useEffect(() => {
+    setName(cookies.Name)
     socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
       console.log("IN SOCKET ENDPT CLIENT JOIN")
       if (res.status == 'success') {
@@ -73,6 +82,7 @@ function Home({name, setName}) {
         <div>
           <input
             placeholder="Nickname"
+            value={name}
             className="addName"
             onChange={e => {
               setName(e.target.value)

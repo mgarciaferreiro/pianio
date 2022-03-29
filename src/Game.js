@@ -9,9 +9,11 @@ import D_Note from './Notes/piano-d_D_major.mp3';
 import E_Note from './Notes/piano-e_E_major.mp3';
 import F_Note from './Notes/piano-f_F_major.mp3';
 import G_Note from './Notes/piano-g_G_major.mp3';
+import { useNavigate } from "react-router-dom";
 
 import { sendUpdate } from './networking'
 import Constants from './shared/constants';
+import { Cookies, useCookies } from 'react-cookie';
 
 const numKeys = 6
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
@@ -43,7 +45,8 @@ function Game({gameState, song, name}) {
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(true);
     // console.log(board)
-
+    const [cookies, setCookie] = useCookies(['user']);
+    
     useEffect(() => {
       // Start timer
       let interval = null;
@@ -102,8 +105,12 @@ function Game({gameState, song, name}) {
         play_G()
       } 
     }
-    
+    let navigate = useNavigate();
+
     useEffect(() => {
+      if(cookies.Name === undefined) {
+        navigate('/')
+      }
         document.addEventListener("keydown", handleKeyPress)
         return () => {
           document.removeEventListener("keydown", handleKeyPress)
