@@ -6,6 +6,12 @@ class Game {
   constructor(host, gameId, socket) {
     this.players = {} //maps player name to player object
     this.host = host
+    
+//     // Generate a random song with 5 notes
+//     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
+//     console.log(this.song)
+//     this.lastUpdateTime = Date.now();
+//     this.shouldSendUpdate = false;
     this.gameId = gameId
     this.socket = socket
 

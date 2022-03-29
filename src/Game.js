@@ -1,6 +1,15 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import Victory from './Victory.js'
+import useSound from 'use-sound';
+import A_Note from './Notes/piano-a_A_major.mp3';
+import B_Note from './Notes/piano-b_B_major.mp3';
+import C_Note from './Notes/piano-c_C_major.mp3';
+import D_Note from './Notes/piano-d_D_major.mp3';
+import E_Note from './Notes/piano-e_E_major.mp3';
+import F_Note from './Notes/piano-f_F_major.mp3';
+import G_Note from './Notes/piano-g_G_major.mp3';
+
 import { sendUpdate } from './networking'
 import Constants from './shared/constants';
 
@@ -48,11 +57,10 @@ function Game({gameState, song, name}) {
       return () => clearInterval(interval);
     }, [isActive, seconds]);
 
+  
     const handleKeyPress = (event) => {
-        console.log(event.key)
         const tilePressed = letters.indexOf(event.key.toUpperCase())
         if (tilePressed === -1) return
-
         const correctTile = song[position]
         if (tilePressed === correctTile) {
           playNote()
@@ -69,19 +77,33 @@ function Game({gameState, song, name}) {
         }
     }
 
-    // plays a random key
+    const [play_A] = useSound(A_Note);
+    const [play_B] = useSound(B_Note);
+    const [play_C] = useSound(C_Note);
+    const [play_D] = useSound(D_Note);
+    const [play_E] = useSound(E_Note);
+    const [play_F] = useSound(F_Note);
+    const [play_G] = useSound(G_Note);
+
+    // plays a randoA_Notem key
     function playNote() {
-      const notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+      const notes = ["A_Note", "B_Note", "C_Note","D_Note","E_Note","F_Note", "G_Note"]
       const randomNote = notes[Math.floor(Math.random() * notes.length)]
-      const noteAudio = document.getElementById(randomNote)
-      noteAudio.currentTime = 0
-      noteAudio.play()
-        .then(() => {
-          // audio is playing
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      if(randomNote === 'A_Note') {
+        play_A()
+      } else if(randomNote === 'B_Note') {
+        play_B()
+      } else if(randomNote === 'C_Note') {
+        play_C()
+      } else if(randomNote === 'D_Note') {
+        play_D()
+      } else if(randomNote === 'E_Note') {
+        play_E()
+      } else if(randomNote === 'F_Note') {
+        play_F()
+      } else if(randomNote === 'G_Note') {
+        play_G()
+      } 
     }
     
     useEffect(() => {
@@ -90,8 +112,9 @@ function Game({gameState, song, name}) {
           document.removeEventListener("keydown", handleKeyPress)
         }
     }, [handleKeyPress])
-  
+
     return (
+
       <div>
         {hasWon && <Victory time = {Number(seconds / 10).toFixed(1)} />}
         {!hasWon &&
