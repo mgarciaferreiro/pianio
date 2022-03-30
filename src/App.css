@@ -344,6 +344,10 @@ li {
 .tile-white {
   background-color: #FFFFFF;
 }
+.tile-char {
+  background-image: url("/src/images/goofy.png");
+  background-size: 18px 15px;;
+}
 
 .tile-black {
   background-color: #1F1F1F;
@@ -371,12 +375,13 @@ li {
   flex-direction: column-reverse;
   height: 100vh;
   width: 10%;
+  /* background-color: purple; */
 }
 
 .tile-small {
   display: flex;
-  height: 12px;
-  width: 10px;
+  height: 15px;
+  width: 12px;
   border: 0.5px solid #CECECE;
 }
 
@@ -384,6 +389,12 @@ li {
   width:100px;
   height:100px;
   margin-bottom:-30px;
+}
+.profileSidePic {
+  width:30px;
+  height: 36px;
+  margin-bottom:-30px;
+  /* border: 1px solid red; */
 }
 
 .player {

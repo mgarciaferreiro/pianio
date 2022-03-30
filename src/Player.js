@@ -21,10 +21,10 @@ function Player({player}) {
 
     return (
         <div>
-            <img className="profilePic" src={images[player.character]} alt="profile picture" />
-            <h4 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
+            <img className="profileSidePic" src={images[player.character]} alt="profile picture" />
+            {/* <h4 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
               {player.username}
-            </h4>
+            </h4> */}
         </div>
     )
 

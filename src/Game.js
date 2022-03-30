@@ -207,16 +207,23 @@ function Game({gameState, song, name}) {
             {getSongArray(song).map((row, i) => (
               <div key={i} >
                 <div className="row">
-                  { row.map((col, j) => (
+                  {position !== i -1 && row.map((col, j) => (
                     <div key={j}
                     className={col ? "tile-small tile-black" : "tile-small tile-white"}>
                     </div>
                   ))}
-                  {position === i ? 
-                  <Player className="player" player={gameState.players[name]}></Player> : null}
+                  {position === i-1 && row.map((col, j) => (
+                    <div key={j}
+                    style={{display: "none"}}
+                    className={col ? "tile-small tile-red" : "tile-small tile-white"}>
+                    </div>
+                  ))}
+                  {position === i-1 && 
+
+                  <Player className="player" player={gameState.players[name]}></Player>}
                   { Object.keys(gameState.players).map((player, j) => (
-                    gameState.players[player].position === i && player !== name ?
-                    <Player className="player" player={gameState.players[player]}></Player> : null
+                    (gameState.players[player].position === i-1 && player !== name) && 
+                    <Player className="player" player={gameState.players[player]}></Player>
                   ))}
                 </div>
               </div>

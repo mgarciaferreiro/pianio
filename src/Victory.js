@@ -5,51 +5,62 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import minnie from './gifs/minnie.gif'
 
+function Victory({ gameState }) {
+  const [createRoom, setCreateRoom] = useState(false)
 
-function Victory(props) {
-    const [createRoom, setCreateRoom] = useState(false);
-    useEffect(() => {
-      WebFont.load({
-        google: {
-          families: ['Abril Fatface', 'GFS Didot', 'Antic Didone'],
-        },
-      })
-    }, [])
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ['Abril Fatface', 'GFS Didot', 'Antic Didone'],
+      },
+    })
+  }, [])
 
-    const roomCreation = () => {
-      setCreateRoom(!createRoom)
-    }
+  const roomCreation = () => {
+    setCreateRoom(!createRoom)
+  }
 
-    return (
-      <div className ="app">
-        <p className="victoryTitle" style={{ fontFamily: 'Abril Fatface' }}>
-        You Finished 1st
+  return (
+    <div className="app">
+      <p className="victoryTitle" style={{ fontFamily: 'Abril Fatface' }}>
+        {gameState.finishers[0]} Finished 1st
       </p>
-      <img className="victoryGif" src={minnie} alt="waiting" />
+      <img
+        className="victoryGif"
+        src={gameState.players[gameState.winner].character}
+        alt="waiting"
+      />
 
       <p className="subtitle" style={{ fontFamily: 'Abril Fatface' }}>
-        with {props.time}s
+        with {gameState.players[gameState.winner].time}s
       </p>
-      <ol>
-        <li>Andri: {props.time}s</li>
-        <br />
-        <li>Bob: 52.9s</li>
-        <br />
-        <li>Alice: 60.5s</li>
-      </ol>
+      {gameState.finishers.map((player, i) => {
+        if (i !== 0) {
+          return (
+            <div>
+              <br />
+              <li>
+                {player}: {gameState.players[player].time}
+              </li>
+            </div>
+          )
+        }
+      })}
+
+      <ol></ol>
       <br />
-      <div className ="App">
-          <Link to="/lobby">
-            <button className="join" onClick={() => roomCreation()}>
-              Create a Room
-            </button>
-          </Link>
-          <Link to="/lobby">
-            <button className="join">Join a Room</button>
-          </Link>
-        </div>
+      <div className="App">
+        <Link to="/lobby">
+          <button className="join" onClick={() => roomCreation()}>
+            Create a Room
+          </button>
+        </Link>
+        <Link to="/lobby">
+          <button className="join">Join a Room</button>
+        </Link>
       </div>
-    )
-  }
-  
-  export default Victory
+    </div>
+  )
+}
+
+export default Victory
