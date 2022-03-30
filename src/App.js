@@ -2,6 +2,7 @@ import './App.css'
 import Lobby from './Lobby'
 import Home from './Home'
 import Game from './Game'
+import Victory from './Victory'
 import io from 'socket.io-client';
 import Constants from './shared/constants';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
@@ -44,7 +45,6 @@ function App() {
     });
     socket.on(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game => {
       console.log('Received game update');
-      console.log(game)
       setGameState(game)
     });
     socket.on(Constants.MSG_TYPES.START_GAME_RESPONSE, () => {
@@ -52,6 +52,13 @@ function App() {
     });
     socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_RESPONSE, () => {
       navigate('/')
+    })
+
+    socket.on(Constants.MSG_TYPES.GAME_WON, game => {
+      console.log("IN GAME WON@@@@@@@@@@@@@@@@@@@")
+      console.log(game)
+      setGameState(game)
+      navigate('/Victory')
     })
     return () => {
       socket.off('connect');
@@ -74,6 +81,7 @@ function App() {
         <Route path="/" element={<Home name={name} setName={setName}/>} />
         <Route path="/lobby" element={<Lobby gameState={gameState} name={name}/>} />
         <Route path="/game" element={<Game gameState={gameState} song={song} name={name}/>} />
+        <Route path="/victory" element={<Victory gameState={gameState}/>} />
       </Routes>
     </div>
     </CookiesProvider>
