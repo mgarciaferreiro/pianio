@@ -15,14 +15,6 @@ import F from './notes/F.mp3'
 import Fs from './notes/Fs.mp3'
 import G from './notes/G.mp3'
 import Gs from './notes/Gs.mp3'
-// import A_Note from './Notes/piano-a_A_major.mp3'
-// import B_Note from './Notes/piano-b_B_major.mp3'
-// import C_Note from './Notes/piano-c_C_major.mp3'
-// import D_Note from './Notes/piano-d_D_major.mp3'
-// import E_Note from './Notes/piano-e_E_major.mp3'
-// import F_Note from './Notes/piano-f_F_major.mp3'
-// import G_Note from './Notes/piano-g_G_major.mp3'
-
 import { sendUpdate } from './networking'
 import Constants from './shared/constants'
 import { useNavigate } from 'react-router-dom'
@@ -140,9 +132,6 @@ function Game({gameState, song, name}) {
       } else if(currNote === 'Gs') {
         play_Gs()
       } 
-      console.log(songPos)
-      songPos = songPos + 1
-      console.log(songPos)
     }
 
     function playRandomNote() {
