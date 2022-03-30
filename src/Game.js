@@ -90,7 +90,7 @@ function Game({gameState, song, name}) {
             } else {
                 setBoard(getBoardAtPosition(song, position + 1))
             }
-            sendUpdate(name, position + 1, gameState.gameId)
+            sendUpdate(name, position + 1, gameState.gameId, seconds)
             setPosition(position + 1)
         } else {
             setSeconds(seconds+10)
@@ -186,8 +186,6 @@ function Game({gameState, song, name}) {
     }, [handleKeyPress])
     return (
       <div>
-        {hasWon && <Victory time = {Number(seconds / 10).toFixed(1)} />}
-        {!hasWon &&
         <div className="flex-container">
           <div className="piano">
           <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
@@ -234,6 +232,6 @@ function Game({gameState, song, name}) {
         }
       </div>
     )
-}
+  }
   
   export default Game

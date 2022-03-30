@@ -4,10 +4,15 @@ import WebFont from 'webfontloader'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import minnie from './gifs/minnie.gif'
+import mickey from './gifs/mickey.gif'
+import donald from './gifs/donald.gif'
+import goofy from './gifs/goofy.gif'
+import tom from './gifs/tom.gif'
+import berlioz from './gifs/berlioz.gif'
 
 function Victory({ gameState }) {
   const [createRoom, setCreateRoom] = useState(false)
-
+  const gifs = {minnie, mickey, donald, goofy, tom, berlioz}
   useEffect(() => {
     WebFont.load({
       google: {
@@ -23,29 +28,31 @@ function Victory({ gameState }) {
   return (
     <div className="app">
       <p className="victoryTitle" style={{ fontFamily: 'Abril Fatface' }}>
-        {gameState.finishers[0]} Finished 1st
+        {gameState.gameHistory[gameState.gameIndex][0]} Finished 1st
       </p>
       <img
         className="victoryGif"
-        src={gameState.players[gameState.winner].character}
+        src={gifs[gameState.players[gameState.gameHistory[gameState.gameIndex][0]].character]}
         alt="waiting"
       />
 
       <p className="subtitle" style={{ fontFamily: 'Abril Fatface' }}>
-        with {gameState.players[gameState.winner].time}s
+        with {gameState.players[gameState.gameHistory[gameState.gameIndex][0]].seconds / 10}s
       </p>
-      {gameState.finishers.map((player, i) => {
-        if (i !== 0) {
+      { 
+      
+      gameState.gameHistory[gameState.gameIndex].map(
+        (playerUsername, i) => {
           return (
-            <div>
-              <br />
+            <div className="text" style={{ fontFamily: 'Abril Fatface' }}>
               <li>
-                {player}: {gameState.players[player].time}
+                {playerUsername}: {gameState.players[playerUsername].seconds / 10}s
               </li>
+              <br/>
             </div>
           )
         }
-      })}
+      )}
 
       <ol></ol>
       <br />
