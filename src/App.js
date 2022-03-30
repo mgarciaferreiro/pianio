@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import React, { useState, useEffect } from 'react'
 import { CookiesProvider } from "react-cookie";
 
-export const socket = io('http://ec2-3-82-195-179.compute-1.amazonaws.com:3001');
+export const socket = io('localhost:3001');
 
 function App() {
   let navigate = useNavigate()

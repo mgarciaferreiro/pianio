@@ -51,7 +51,7 @@ function Home({name, setName}) {
       setErrorMessage("Lobby code must be 4 characters")
     } else {
       joinGame(name, lobbyCode)
-      setErrorMessage("")
+      setErrorMessage("Lobby code is invalid")
     }
   }
 
@@ -121,16 +121,18 @@ function Home({name, setName}) {
 
 {joiningRoom && (
         <div>
+        <form onSubmit={() => joinRoom()}>
         <input
-          placeholder="4 Character Lobby Code"
+          placeholder="4 Character Code"
           className="addName"
           onChange={e => {
-            setLobbyCode(e.target.value)
+            setLobbyCode(e.target.value.toUpperCase())
           }}
         ></input>
         <button className="joinRoom" onClick={() => joinRoom()}>
           Join Room
         </button>
+        </form>
         <Link to="/lobby">
             <button className="joinRoom" onClick={() => createGame(name)}>
               Random Room
