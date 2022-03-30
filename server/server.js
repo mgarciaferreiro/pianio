@@ -20,8 +20,8 @@ io.on('connection', socket => {
   // TODO: register the other functions
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
     joinGame(username, gameId, socket));
-  socket.on(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, (username, position, gameId) => 
-    updateGame(username, position, gameId, socket));
+  socket.on(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, (username, position, gameId, seconds) => 
+    updateGame(username, position, gameId, seconds, socket));
   socket.on(Constants.MSG_TYPES.START_GAME_REQUEST, (gameId) => startGame(gameId, socket));
   socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_REQUEST, () =>
     onDisconnect(socket));
@@ -104,10 +104,13 @@ function joinGame(username, gameId, socket) {
   }
 }
 
-function updateGame(username, position, gameId, socket) {
+function updateGame(username, position, gameId, seconds, socket) {
   console.log('Updating game ' + gameId + username + position)
   game = games[gameId];
-  game.setPosition(username, position)
+  if (game.setPosition(username, position, seconds)) {
+    console.log(game.createGameWithoutSocket())
+    socket.emit(Constants.MSG_TYPES.GAME_WON, game.createGameWithoutSocket())
+  }
   socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket()); //emit to client
 }
 

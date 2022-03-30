@@ -17,6 +17,12 @@ class Game {
     this.gameSocket = gameSocket
     this.socketIdToUsername = {}
 
+    this.gameIndex = 0
+
+    this.gameHistory = {}
+    this.gameHistory[0] = []
+    this.userNameToWins = {}
+
     // Generate a random song with 6 notes
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
   }
@@ -51,21 +57,23 @@ class Game {
     }
   }
 
-  setPosition(username, position) {
+  setPosition(username, position, seconds) {
     const player = this.players[username]
-    player.setPosition(position)
+    if (player.setPosition(position, seconds)) {
+      this.gameHistory[this.gameIndex].push(player.username)
+      return true
+    }
+
     this.players[username] = player
   }
 
   update() {
-
-    // TODO: Check if any players have won
-    // this.players.forEach((player, i) => {
-    //   if (player.isFinished) {
-    //     socket.emit(Constants.MSG_TYPES.GAME_WON);
-    //     this.removePlayer(socket);
-    //   }
-    // })
+    /*this.players.forEach((player, i) => {
+      if (player.isFinished) {
+        socket.emit(Constants.MSG_TYPES.GAME_WON);
+        this.removePlayer(socket);
+      }
+    })*/
 
     // Send a game update to each player 
     this.gameSocket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, this.createGameWithoutSocket())
@@ -86,7 +94,10 @@ class Game {
       host: this.host,
       gameId: this.gameId,
       socketIdToUsername: this.socketIdToUsername,
-      song: this.song
+      song: this.song,
+      gameHistory: this.gameHistory,
+      gameIndex: this.gameIndex,
+      usernameToWins: this.usernameToWins
     }
   }
 }
