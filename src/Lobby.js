@@ -13,7 +13,7 @@ import Session from 'react-session-api'
 
 
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { startGame } from './networking'
+import { startGame, leaveLobby } from './networking'
 
 
 const gifs = {minnie, mickey, donald, goofy, tom, berlioz}
@@ -24,6 +24,10 @@ function Lobby({gameState, name}) {
   const clickedStartGame = () => {
     console.log(gameState.gameId)
     startGame(gameState.gameId)
+  }
+
+  const clickedLeaveLobby = () => {
+    leaveLobby()
   }
 
   useEffect(() => {
@@ -63,9 +67,11 @@ function Lobby({gameState, name}) {
         {gameState.host !== name && (
           <div>
             <h3>Waiting for {gameState.host} to start the game</h3>
-            <Link to="/">
-              <button className="startGame">Leave Lobby</button>
-            </Link>
+            <Link to='/'>
+            <button className="startGame" onClick={() => clickedLeaveLobby(name)}>Leave Lobby</button>
+              </Link>  
+              
+
 
           </div>
         )}
