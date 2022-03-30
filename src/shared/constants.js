@@ -1,5 +1,5 @@
 module.exports = Object.freeze({
-    SONG_LENGTH: 6,
+    SONG_LENGTH: 40,
     SONGS: {
       // lengths respectively: 41, 25, 29
       SONG1: ['C', 'C', 'G', 'G', 'A', 'A', 'G', 'F', 'F', 'E', 'E', 'D', 'D', 'C', 'G', 'G', 'F', 'F', 'E', 'E', 'D', 'G', 'G', 'F', 'F', 'E', 'E', 'D', 'C', 'G', 'G', 'A', 'A', 'G', 'F', 'F', 'E', 'E', 'D', 'D', 'C'],

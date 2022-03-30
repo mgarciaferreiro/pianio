@@ -27,12 +27,12 @@ function Victory({ gameState }) {
       </p>
       <img
         className="victoryGif"
-        src={gameState.players[gameState.winner].character}
+        src={gameState.players[gameState.finishers[0]].character}
         alt="waiting"
       />
 
       <p className="subtitle" style={{ fontFamily: 'Abril Fatface' }}>
-        with {gameState.players[gameState.winner].time}s
+        with {gameState.players[gameState.finishers[0]].time}s
       </p>
       {gameState.finishers.map((player, i) => {
         if (i !== 0) {

@@ -84,17 +84,22 @@ function Home({name, setName}) {
       <p className="blurb">race to play piano tiles with your keyboard</p>
       {(!loggedIn && !joiningRoom)&& (
         <div>
-          <input
-            placeholder="Nickname"
-            value={name}
-            className="addName"
-            onChange={e => {
-              setName(e.target.value)
-            }}
-          ></input>
-          <button className="play" onClick={() => checkName()}>
+          <form onSubmit={() => checkName()}>
+
+            <input
+              placeholder="Nickname"
+              value={name}
+              className="addName"
+              onChange={e => {
+                setName(e.target.value)
+              }}
+            ></input>
+            <button className="play" onClick={() => checkName()}>
             Play
           </button>
+          </form>
+
+          
         </div>
       )}
 
