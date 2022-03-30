@@ -56,7 +56,7 @@ function Home({ name, setName }) {
       setErrorMessage('Lobby code must be 4 characters')
     } else {
       joinGame(name, lobbyCode)
-      setErrorMessage('')
+      setErrorMessage("Lobby code is invalid")
     }
   }
 
@@ -157,7 +157,7 @@ function Home({ name, setName }) {
             placeholder="4 Character Lobby Code"
             className="addName"
             onChange={e => {
-              setLobbyCode(e.target.value)
+              setLobbyCode(e.target.value.toUpperCase())
             }}
           ></input>
           <button className="joinRoom" onClick={() => joinRoom()}>

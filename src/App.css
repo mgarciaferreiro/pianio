@@ -64,7 +64,7 @@
   line-height: 61px;
   text-align: center;
   letter-spacing: 0.05em;
-  /* margin-bottom: -10px; */
+  margin-bottom: 20px;
 }
 
 .victoryTitle {
@@ -301,9 +301,9 @@ li {
 .waitingGif {
   width:50%;
   margin-left:25%;
-  border-radius: 40px;
+  border-radius: 100%;
   /* margin-top:10%; */
-}
+}x
 .victoryGif {
   width:15%;
   margin-left:42.5%;
@@ -319,6 +319,7 @@ li {
     /* line-height: 161px; */
     text-align: center;
     letter-spacing: 0.05em;
+    margin-top: 0;
 }
 
 .player1 {
@@ -441,4 +442,8 @@ li {
 
 .player {
   position: absolute;
+}
+
+input {
+  border: none;
 }
