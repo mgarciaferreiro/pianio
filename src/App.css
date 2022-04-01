@@ -301,13 +301,17 @@ li {
 .waitingGif {
   width:50%;
   margin-left:25%;
-  border-radius: 100%;
+  border-radius: 20%;
   /* margin-top:10%; */
-}x
+}
+
 .victoryGif {
-  width:15%;
-  margin-left:42.5%;
-  border-radius: 40px;
+  width:20%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-left:42.5%; */
+  border-radius: 20%;
   margin-bottom:-5%;
 }
 
@@ -354,17 +358,16 @@ li {
 
 .flex-container {
   display: flex;
+  justify-content: right;
+  /* align-items: right; */
 }
 
 .piano {
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-right: -100px; */
   flex-direction: column-reverse;
   height: 100vh;
-  width: 100%;
 }
 
 .row {
@@ -377,7 +380,7 @@ li {
   justify-content: center;
   align-items: flex-end;
   height: 30vh;
-  min-width: 100px;
+  min-width: 120px;
   border: 0.5px solid #CECECE;
   color: #CECECE;
   font-size: 20px;
@@ -409,22 +412,22 @@ li {
   top: -30px;
 }
 
-.progress-board {
+.progressBoard {
   display: flex;
-  justify-content: left;
-  margin-left: 0px;
-  margin-right: 300px;
+  justify-content: center;
+  margin-left: 200px;
+  /* margin-right: 0px; */
   align-items: left;
   flex-direction: column-reverse;
   height: 100vh;
-  width: 10%;
+  width: 20%;
   /* background-color: purple; */
 }
 
 .tile-small {
   display: flex;
-  height: 15px;
-  width: 12px;
+  height: 16px;
+  width: 15px;
   border: 0.5px solid #CECECE;
 }
 
@@ -434,8 +437,8 @@ li {
   margin-bottom:-30px;
 }
 .profileSidePic {
-  width:30px;
-  height: 36px;
+  width:40px;
+  /* height: 46px; */
   margin-bottom:-30px;
   /* border: 1px solid red; */
 }
@@ -446,4 +449,14 @@ li {
 
 input {
   border: none;
+}
+
+.progressText {
+  color: #CFB53B;
+  font-size: 22px;
+  /* font-style: normal; */
+  text-align: left;
+  letter-spacing: 0.05em;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }

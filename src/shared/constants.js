@@ -32,7 +32,7 @@ module.exports = Object.freeze({
       START_GAME_RESPONSE: 'start_game_response',
       RESTART_GAME: 'restart_game',
       PLAYER_JOINED_SESSION: 'player_joined_session',
-      DISCONNECT: 'disconnect',
+      DISCONNECTED: 'disconnected',
       GET_OVERALL_LEADERBOARD: 'get_overall_leaderboard',
       FINISH_GAME: 'finish_game',
       LEAVE_LOBBY_REQUEST: 'leave_lobby_request'

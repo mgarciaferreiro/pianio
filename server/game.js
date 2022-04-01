@@ -6,11 +6,6 @@ class Game {
     this.players = {} //maps player name to player object
     this.host = host
     
-//     // Generate a random song with 5 notes
-//     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
-//     console.log(this.song)
-//     this.lastUpdateTime = Date.now();
-//     this.shouldSendUpdate = false;
     this.gameId = gameId
     this.availableCharacters = ["minnie", "mickey", "donald", "goofy", "tom", "berlioz"]
 
@@ -24,7 +19,9 @@ class Game {
     this.userNameToWins = {}
 
     // Generate a random song with 6 notes
-    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
+    this.songIndex = Object.keys(Constants.SONGS)[Math.floor(Math.random() * Object.keys(Constants.SONGS).length)]
+    const songLength = (Constants.SONGS[this.songIndex]).length
+    this.song = Array.from({length: songLength}, () =>  Math.floor(Math.random() * 6))
   }
 
   // TODO: use this?
@@ -79,25 +76,17 @@ class Game {
     this.gameSocket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, this.createGameWithoutSocket())
   }
 
-  // Create update to send to the client
-  /*createUpdate() {
-    return {
-      players: this.players.map((name, playerObj) => p.serializeForUpdate()),
-      host: this.host,
-      gameId: this.gameId
-    }
-  }
-*/
+  // Create game object to send to the client
   createGameWithoutSocket() {
     return {
       players: this.players,
       host: this.host,
       gameId: this.gameId,
       socketIdToUsername: this.socketIdToUsername,
-      song: this.song,
       gameHistory: this.gameHistory,
       gameIndex: this.gameIndex,
-      usernameToWins: this.usernameToWins
+      usernameToWins: this.usernameToWins,
+      songIndex: this.songIndex,
     }
   }
 }

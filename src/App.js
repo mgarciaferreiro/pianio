@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react'
 import { CookiesProvider } from "react-cookie";
 
 export const socket = io('localhost:3001');
+// export const socket = io('http://ec2-3-82-195-179.compute-1.amazonaws.com:3001/');
 
 function App() {
   let navigate = useNavigate()
@@ -23,24 +24,24 @@ function App() {
       setIsConnected(true)
     });
     socket.on('disconnect', () => {
-      socket.emit(Constants.MSG_TYPES.DISCONNECT)
+      socket.emit(Constants.MSG_TYPES.DISCONNECTED)
       setIsConnected(false)
     });
-    socket.on(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game => {
+    socket.on(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, (game, song) => {
       console.log('Created game with ID ' + game.gameId)
       console.log(game)
       setGameState(game)
-      setSong(Array.from(game.song))
+      setSong(Array.from(song))
       navigate('/Lobby')
     });
     socket.on(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game => {
       console.log('Player joined game ' + game.gameId)
       setGameState(game)
     });
-    socket.on(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game => {
+    socket.on(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, (game, song) => {
       console.log('Joined game successfully')
       setGameState(game)
-      setSong(game.song)
+      setSong(song)
       navigate('/Lobby')
     });
     socket.on(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game => {

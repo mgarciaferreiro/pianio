@@ -15,7 +15,9 @@ io.on('connection', socket => {
   });
 
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket));
-  socket.on(Constants.MSG_TYPES.DISCONNECT, () => 
+  socket.on('disconnect', () => 
+    onDisconnect(socket));
+  socket.on(Constants.MSG_TYPES.DISCONNECTED, () => 
     onDisconnect(socket));
   // TODO: register the other functions
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
@@ -83,7 +85,7 @@ function createGame(hostName, socket) {
 
   console.log(hostName + ' created game ' + gameId);
   console.log(game)
-  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket()); //emit to client
+  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket(), game.song); //emit to client
 }
 
 // TODO: test and add back these functions
@@ -95,12 +97,11 @@ function joinGame(username, gameId, socket) {
   } else {
     game = games[gameId];
     game.addPlayer(username, socket.id);
-    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game.createGameWithoutSocket()); 
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, game.createGameWithoutSocket(), game.song); 
 
     socket.join(gameId);
-    socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game.createGameWithoutSocket()); //emit to client
-
     //emit to client
+    socket.to(gameId).emit(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game.createGameWithoutSocket()); //emit to client
   }
 }
 
@@ -108,7 +109,7 @@ function updateGame(username, position, gameId, seconds, socket) {
   console.log('Updating game ' + gameId + username + position)
   game = games[gameId];
   if (game.setPosition(username, position, seconds)) {
-    console.log(game.createGameWithoutSocket())
+    // console.log(game.createGameWithoutSocket())
     socket.emit(Constants.MSG_TYPES.GAME_WON, game.createGameWithoutSocket())
   }
   socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket()); //emit to client

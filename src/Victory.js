@@ -28,7 +28,7 @@ function Victory({ gameState }) {
   return (
     <div className="app">
       <p className="victoryTitle" style={{ fontFamily: 'Abril Fatface' }}>
-        {gameState.gameHistory[gameState.gameIndex][0]} Finished 1st
+        {gameState.gameHistory[gameState.gameIndex][0]} finished 1st
       </p>
       <img
         className="victoryGif"

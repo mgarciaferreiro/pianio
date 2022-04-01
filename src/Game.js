@@ -23,13 +23,9 @@ import Session from 'react-session-api'
 const numKeys = 6
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
 
-const randomSong = Object.keys(Constants.SONGS)[Math.floor(Math.random() * Object.keys(Constants.SONGS).length)]
-const randomSongArray = Constants.SONGS[randomSong]
-var songPos = 0
-
 const getSongArray = song => {
-  const songArray = Array(Constants.SONG_LENGTH).fill().map(() => Array(numKeys).fill(0))
-  for (let i = 0; i < Constants.SONG_LENGTH; i++) {
+  const songArray = Array(song.length).fill().map(() => Array(numKeys).fill(0))
+  for (let i = 0; i < song.length; i++) {
     let blackTileIndex = song[i]
     songArray[i][blackTileIndex] = 1
   }
@@ -73,24 +69,22 @@ function Game({gameState, song, name}) {
         if (tilePressed === -1) return
         const correctTile = song[position]
         if (tilePressed === correctTile) {
-          // playRandomNote()
-          playSong(songPos)
-          songPos = songPos + 1
-            if (position === song.length-1) {
-                setHasWon(true)
-                setIsActive(false)
-            } else {
-                setBoard(getBoardAtPosition(song, position + 1))
-            }
-            sendUpdate(name, position + 1, gameState.gameId, seconds)
-            setPosition(position + 1)
+          playNote()
+          if (position === song.length-1) {
+              setHasWon(true)
+              setIsActive(false)
+          } else {
+              setBoard(getBoardAtPosition(song, position + 1))
+          }
+          sendUpdate(name, position + 1, gameState.gameId, seconds)
+          setPosition(position + 1)
         } else {
             setSeconds(seconds+10)
             setHasLost(true)
         }
     }
 
-    const notes = ['A', 'As', 'B', 'C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs']
+    // const notes = ['A', 'As', 'B', 'C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs']
     const [play_A] = useSound(A);
     const [play_As] = useSound(As);
     const [play_B] = useSound(B);
@@ -104,9 +98,10 @@ function Game({gameState, song, name}) {
     const [play_G] = useSound(G);
     const [play_Gs] = useSound(Gs);
 
-    function playSong(songPos) {
-      const currNote = randomSongArray[songPos]
-      console.log(currNote + " is the current note")
+    function playNote() {
+      // const randomNote = notes[Math.floor(Math.random() * notes.length)]
+      const currNote = Constants.SONGS[gameState.songIndex][position]
+      // console.log(currNote + " is the current note")
       if(currNote === 'A') {
         play_A()
       } else if(currNote === 'As') {
@@ -134,34 +129,6 @@ function Game({gameState, song, name}) {
       } 
     }
 
-    function playRandomNote() {
-      const randomNote = notes[Math.floor(Math.random() * notes.length)]
-      if(randomNote === 'A') {
-        play_A()
-      } else if(randomNote === 'As') {
-          play_As()
-      } else if(randomNote === 'B') {
-        play_B()
-      } else if(randomNote === 'C') {
-        play_C()
-      } else if(randomNote === 'Cs') {
-        play_Cs()
-      } else if(randomNote === 'D') {
-        play_D()
-      } else if(randomNote === 'Ds') {
-        play_Ds()
-      } else if(randomNote === 'E') {
-        play_E()
-      } else if(randomNote === 'F') {
-        play_F()
-      } else if(randomNote === 'Fs') {
-        play_Fs()
-      } else if(randomNote === 'G') {
-        play_G()
-      } else if(randomNote === 'Gs') {
-        play_Gs()
-      } 
-    }
     let navigate = useNavigate();
 
     useEffect(() => {
@@ -174,7 +141,6 @@ function Game({gameState, song, name}) {
         }
     }, [handleKeyPress])
     return (
-      <div>
         <div className="flex-container">
           <div className="piano">
           <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
@@ -189,22 +155,22 @@ function Game({gameState, song, name}) {
               </div>
             ))}
           </div>
-          <div className="progress-board">
-            <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>START</h3>
+          <div className="progressBoard">
+            <h3 className="progressText" style={{ fontFamily: 'Abril Fatface' }}>START</h3>
             {getSongArray(song).map((row, i) => (
               <div key={i} >
                 <div className="row">
-                  {position !== i -1 && row.map((col, j) => (
+                  {row.map((col, j) => (
                     <div key={j}
                     className={col ? "tile-small tile-black" : "tile-small tile-white"}>
                     </div>
                   ))}
-                  {position === i-1 && row.map((col, j) => (
+                  {/* {position === i-1 && row.map((col, j) => (
                     <div key={j}
                     style={{display: "none"}}
                     className={col ? "tile-small tile-red" : "tile-small tile-white"}>
                     </div>
-                  ))}
+                  ))} */}
                   {position === i-1 && 
 
                   <Player className="player" player={gameState.players[name]}></Player>}
@@ -215,11 +181,9 @@ function Game({gameState, song, name}) {
                 </div>
               </div>
             ))}
-            <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>END</h3>
+            <h3 className="progressText" style={{ fontFamily: 'Abril Fatface' }}>END</h3>
           </div>
         </div>
-        }
-      </div>
     )
   }
   
