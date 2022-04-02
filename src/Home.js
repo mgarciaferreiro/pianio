@@ -4,7 +4,7 @@ import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
 import Constants from './shared/constants'
-import { createGame, joinGame } from './networking'
+import { createGame, joinGame, joinRandomGame } from './networking'
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
@@ -64,13 +64,17 @@ function Home({ name, setName }) {
     console.log(Session.get('Name'))
 
     setName(cookies.Name)
-    socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
-      console.log('IN SOCKET ENDPT CLIENT JOIN')
-      if (res.status == 'success') {
-        console.log('client join success')
-      } else {
-        console.log('client join fail')
-      }
+    // socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
+    //   console.log('IN SOCKET ENDPT CLIENT JOIN')
+    //   if (res.status == 'success') {
+    //     console.log('client join success')
+    //   } else {
+    //     console.log('client join fail')
+    //   }
+    // })
+    socket.on(Constants.MSG_TYPES.JOIN_GAME_FAILURE, e => {
+      console.log(e)
+      setErrorMessage(e)
     })
     WebFont.load({
       google: {
@@ -163,11 +167,9 @@ function Home({ name, setName }) {
           <button className="joinRoom" onClick={() => joinRoom()}>
             Join Room
           </button>
-          <Link to="/lobby">
-            <button className="joinRoom" onClick={() => createGame(name)}>
-              Random Room
-            </button>
-          </Link>
+          <button className="joinRoom" onClick={() => joinRandomGame(name)}>
+            Random Room
+          </button>
           <br />
           <button className="backButton" onClick={() => toggleJoiningRoom()}>
             Back

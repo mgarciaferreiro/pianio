@@ -17,12 +17,13 @@ module.exports = Object.freeze({
       SONG6: ['C', 'E', 'F', 'G', 'C', 'E', 'F', 'G', 'C', 'E', 'F', 'G', 'E', 'C', 'E', 'D', 'E', 'D', 'C', 'C', 'E', 'G', 'G', 'G', 'F', 'E', 'F', 'G', 'E', 'D', 'D', 'C', 'C', 'E', 'F', 'G', 'C', 'E', 'F', 'G', 'C', 'E'],
       SONG7: ['C', 'D', 'Ds', 'G', 'F', 'Ds', 'F', 'Ds', 'D', 'D', 'D', 'D', 'D', 'Ds', 'D', 'C', 'C', 'D', 'Ds', 'G', 'F', 'Ds', 'F', 'Ds', 'D', 'D', 'D', 'D', 'D', 'Ds', 'D', 'C', 'G', 'G', 'G', 'F', 'F', 'Ds', 'F', 'Ds', 'F', 'Ds', 'F', 'Ds', 'C']
     },
-    NUM_PLAYERS_MAX: 5,
+    NUM_PLAYERS_MAX: 6,
     MAP_SIZE: 3000,
     MSG_TYPES: {
       JOIN_GAME_REQUEST: 'join_game',
       JOIN_GAME_SUCCESS: 'join_game_success',
       JOIN_GAME_FAILURE: 'join_game_failure',
+      JOIN_RANDOM_GAME_REQUEST: 'join_random_game',
       GAME_UPDATE_REQUEST: 'game_update_request',
       GAME_UPDATE_RESPONSE: 'game_update_response',
       GAME_WON: 'won',

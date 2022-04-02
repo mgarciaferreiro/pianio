@@ -42,16 +42,6 @@ function Lobby({gameState, name}) {
   }, [])
 
   return (
-    /**<div>
-
-      <br />
-      <div className="flex-container">
-        {gameState != null ? Object.keys(gameState.players).map((player, i) => 
-          <div key={player} className={"player1"}>
-            <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
-            <h3 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
-              {player}
-        </h3>*/
 <div>
 {Session.get("Name") !== undefined &&
         <div>
@@ -78,8 +68,8 @@ function Lobby({gameState, name}) {
   
         {
           Object.keys(gameState.players).map((player, i) => {
-            console.log(player, i)
-            console.log(gameState.players)
+            // console.log(player, i)
+            // console.log(gameState.players)
 
             if (i + 1 < Object.keys(gameState.players).length && i % 2 === 0) {
               return (

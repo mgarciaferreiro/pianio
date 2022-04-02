@@ -2,7 +2,7 @@ const Constants = require('../src/shared/constants');
 const Player = require('./player');
 class Game {
 
-  constructor(host, gameId, gameSocket) {
+  constructor(host, gameId, gameSocket, isPrivate) {
     this.players = {} //maps player name to player object
     this.host = host
     
@@ -17,6 +17,7 @@ class Game {
     this.gameHistory = {}
     this.gameHistory[0] = []
     this.userNameToWins = {}
+    this.isPrivate = isPrivate
 
     // Generate a random song with 6 notes
     this.songIndex = Object.keys(Constants.SONGS)[Math.floor(Math.random() * Object.keys(Constants.SONGS).length)]
@@ -40,10 +41,10 @@ class Game {
   }
 
   removePlayer(socketId) {
-    console.log("in remove player " + socketId)
-    console.log(this.players)
-    console.log(this.socketIdToUsername)
-    if (socketId in this.socketIdToUsername) {
+    // console.log("in remove player " + socketId)
+    // console.log(this.players)
+    // console.log(this.socketIdToUsername)
+    if (socketId in this.socketIdToUsername && this.socketIdToUsername[socketId] in this.players) {
       const character = this.players[this.socketIdToUsername[socketId]].getCharacter()
       this.availableCharacters.push(character)
       delete this.players[this.socketIdToUsername[socketId]]
@@ -56,11 +57,10 @@ class Game {
 
   setPosition(username, position, seconds) {
     const player = this.players[username]
-    if (player.setPosition(position, seconds)) {
+    if (player != null && player.setPosition(position, seconds)) {
       this.gameHistory[this.gameIndex].push(player.username)
       return true
     }
-
     this.players[username] = player
   }
 

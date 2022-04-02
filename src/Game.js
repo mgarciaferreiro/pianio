@@ -165,17 +165,11 @@ function Game({gameState, song, name}) {
                     className={col ? "tile-small tile-black" : "tile-small tile-white"}>
                     </div>
                   ))}
-                  {/* {position === i-1 && row.map((col, j) => (
-                    <div key={j}
-                    style={{display: "none"}}
-                    className={col ? "tile-small tile-red" : "tile-small tile-white"}>
-                    </div>
-                  ))} */}
-                  {position === i-1 && 
+                  {position === i && 
 
                   <Player className="player" player={gameState.players[name]}></Player>}
                   { Object.keys(gameState.players).map((player, j) => (
-                    (gameState.players[player].position === i-1 && player !== name) && 
+                    (gameState.players[player].position === i && player !== name) && 
                     <Player className="player" player={gameState.players[player]}></Player>
                   ))}
                 </div>

@@ -14,7 +14,8 @@ io.on('connection', socket => {
     console.log(`hello from ${socket.id}`);
   });
 
-  socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket));
+  socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket, true));
+
   socket.on('disconnect', () => 
     onDisconnect(socket));
   socket.on(Constants.MSG_TYPES.DISCONNECTED, () => 
@@ -22,6 +23,8 @@ io.on('connection', socket => {
   // TODO: register the other functions
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
     joinGame(username, gameId, socket));
+  socket.on(Constants.MSG_TYPES.JOIN_RANDOM_GAME_REQUEST, (username) => 
+    joinRandomGame(username, socket));
   socket.on(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, (username, position, gameId, seconds) => 
     updateGame(username, position, gameId, seconds, socket));
   socket.on(Constants.MSG_TYPES.START_GAME_REQUEST, (gameId) => startGame(gameId, socket));
@@ -44,15 +47,21 @@ const games = {} // maps gameId to game objects
 
 function onDisconnect(socket) {
   // this = socket
-  console.log(`disconnect: ${this.id}`);
-  // TODO: remove the player from the game
-  console.log(games)
+  console.log(`disconnect: ${socket.id}`);
+  // console.log(games)
+  let toDelete = null
   for (const [gid, g] of Object.entries(games)) {
-    console.log([gid, g])
     if (g.removePlayer(socket.id)) {
-      console.log('removed player')
       socket.to(gid).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, g.createGameWithoutSocket());
+      // Delete empty games
+      if (Object.keys(g.players).length == 0) {
+        toDelete = gid
+      }
     }
+  }
+  if (toDelete != null && toDelete in games) {
+    delete games[toDelete]
+    console.log('deleted game ' + toDelete)
   }
 }
 
@@ -68,7 +77,7 @@ function generateGameId() {
     return result;
   }
 
-function createGame(hostName, socket) {
+function createGame(hostName, socket, isPrivate) {
   console.log('Creating game ' + hostName)
 
   gameId = generateGameId()
@@ -77,14 +86,14 @@ function createGame(hostName, socket) {
     gameId = generateGameId()
   }
 
-  const game = new Game(hostName, gameId, socket);
+  const game = new Game(hostName, gameId, socket, isPrivate);
   game.addPlayer(hostName, socket.id)
 
   games[gameId] = game;
   socket.join(gameId);
 
   console.log(hostName + ' created game ' + gameId);
-  console.log(game)
+  console.log(game.createGameWithoutSocket())
   socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket(), game.song); //emit to client
 }
 
@@ -93,7 +102,9 @@ function createGame(hostName, socket) {
 function joinGame(username, gameId, socket) {
   console.log('Joining game ' + gameId + username)
   if (!(gameId in games)) {
-    socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE);
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE, 'Game does not exist');
+  } else if (Object.keys(games[gameId].players).length >= Constants.NUM_PLAYERS_MAX) {
+    socket.emit(Constants.MSG_TYPES.JOIN_GAME_FAILURE, 'Game is full');
   } else {
     game = games[gameId];
     game.addPlayer(username, socket.id);
@@ -123,6 +134,16 @@ function startGame(gameId, socket) {
   socket.to(gameId).emit(Constants.MSG_TYPES.START_GAME_RESPONSE);
 }
 
+function joinRandomGame(username, socket) {
+  console.log(username + ' called join random game in server')
+  for (const [gid, game] of Object.entries(games)) {
+    if (!game.isPrivate && Object.keys(game.players).length < Constants.NUM_PLAYERS_MAX) {
+      joinGame(username, gid, socket)
+      return
+    }
+  }
+  createGame(username, socket, false)
+}
 
 // function restartGame(gameId) {
 //   this.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME);
