@@ -10,9 +10,10 @@ import goofy from './gifs/goofy.gif'
 import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
 
-function Victory({ gameState }) {
-  const [createRoom, setCreateRoom] = useState(false)
-  const gifs = { minnie, mickey, donald, goofy, tom, berlioz }
+import { restartGame } from './networking'
+
+function Victory({ gameState, name }) {
+  const gifs = {minnie, mickey, donald, goofy, tom, berlioz}
   useEffect(() => {
     WebFont.load({
       google: {
@@ -21,8 +22,9 @@ function Victory({ gameState }) {
     })
   }, [])
 
-  const roomCreation = () => {
-    setCreateRoom(!createRoom)
+
+  const clickedRestart = () => {
+    restartGame(gameState.gameId)
   }
 
   return (
@@ -61,14 +63,10 @@ function Victory({ gameState }) {
 
       <br />
       <div className="App">
-        <Link to="/lobby">
-          <button className="join" onClick={() => roomCreation()}>
-            Create a Room
-          </button>
-        </Link>
-        <Link to="/lobby">
-          <button className="join">Join a Room</button>
-        </Link>
+        {gameState.host === name && (
+          <button className="startGame" onClick={() => clickedRestart()}>
+            Return to Lobby</button>
+        )}
       </div>
     </div>
   )

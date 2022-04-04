@@ -30,6 +30,7 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.START_GAME_REQUEST, (gameId) => startGame(gameId, socket));
   socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_REQUEST, () =>
     onDisconnect(socket));
+  socket.on(Constants.MSG_TYPES.RESTART_GAME_REQUEST, (gameId) => restartGame(gameId, socket))
   // socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
   // socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
 
@@ -123,14 +124,15 @@ function updateGame(username, position, gameId, seconds, socket) {
     // console.log(game.createGameWithoutSocket())
     socket.emit(Constants.MSG_TYPES.GAME_WON, game.createGameWithoutSocket())
   }
+  socket.emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket())
   socket.to(gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket()); //emit to client
 }
 
 function startGame(gameId, socket) {
   console.log('Starting game ' + gameId)
-  const game = games[gameId];
-  game.start();
-  socket.emit(Constants.MSG_TYPES.START_GAME_RESPONSE)
+  //const game = games[gameId];
+  //game.start();
+  //socket.emit(Constants.MSG_TYPES.START_GAME_RESPONSE)
   socket.to(gameId).emit(Constants.MSG_TYPES.START_GAME_RESPONSE);
 }
 
@@ -145,11 +147,13 @@ function joinRandomGame(username, socket) {
   createGame(username, socket, false)
 }
 
-// function restartGame(gameId) {
-//   this.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME);
-//   const game = games[gameId];
-//   game.start();
-// }
+function restartGame(gameId, socket) {
+  console.log("sending restart game emit from server")
+  let game = games[gameId];
+  game.reset()
+  socket.emit(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, game.createGameWithoutSocket());
+  socket.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, game.createGameWithoutSocket());
+}
 
 // function getOverallLeaderboard(gameId) {
 //   const game = games[gameId];

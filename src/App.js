@@ -56,10 +56,16 @@ function App() {
     })
 
     socket.on(Constants.MSG_TYPES.GAME_WON, game => {
-      console.log("IN GAME WON@@@@@@@@@@@@@@@@@@@")
-      console.log(game)
+      console.log("IN HERE SOMEHOW??S?S?S")
       setGameState(game)
       navigate('/Victory')
+    })
+
+    socket.on(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, (game) => {
+      console.log("IN RESTARTGAMERESPONSE%!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@$")
+      console.log(game)
+      navigate('/Lobby')
+      setGameState(game)
     })
     return () => {
       socket.off('connect');
@@ -86,7 +92,7 @@ function App() {
         <Route path="/" element={<Home name={name} setName={setName}/>} />
         <Route path="/lobby" element={<Lobby gameState={gameState} name={name}/>} />
         <Route path="/game" element={<Game gameState={gameState} song={song} name={name}/>} />
-        <Route path="/victory" element={<Victory gameState={gameState}/>} />
+        <Route path="/victory" element={<Victory gameState={gameState} name={name}/>} />
       </Routes>
     </div>
     </CookiesProvider>

@@ -31,11 +31,12 @@ module.exports = Object.freeze({
       CREATE_GAME_SUCCESS: 'create_game_success',
       START_GAME_REQUEST: 'start_game_request',
       START_GAME_RESPONSE: 'start_game_response',
-      RESTART_GAME: 'restart_game',
+      RESTART_GAME_REQUEST: 'restart_game_request',
+      RESTART_GAME_RESPONSE: 'restart_game_response',
       PLAYER_JOINED_SESSION: 'player_joined_session',
       DISCONNECTED: 'disconnected',
       GET_OVERALL_LEADERBOARD: 'get_overall_leaderboard',
       FINISH_GAME: 'finish_game',
-      LEAVE_LOBBY_REQUEST: 'leave_lobby_request'
+      LEAVE_LOBBY_REQUEST: 'leave_lobby_request',
     },
 });

@@ -23,6 +23,7 @@ function Lobby({gameState, name}) {
 
   const clickedStartGame = () => {
     console.log(gameState.gameId)
+    navigate('/Game')
     startGame(gameState.gameId)
   }
 
@@ -57,10 +58,8 @@ function Lobby({gameState, name}) {
         {gameState.host !== name && (
           <div>
             <h3>Waiting for {gameState.host} to start the game</h3>
-            <Link to='/'>
-            <button className="startGame" onClick={() => clickedLeaveLobby(name)}>Leave Lobby</button>
-              </Link>  
-              
+            <Link to='/'></Link>  
+              <button className="startGame" onClick={() => clickedLeaveLobby(name)}>Leave Lobby</button>
 
 
           </div>
@@ -68,33 +67,31 @@ function Lobby({gameState, name}) {
   
         {
           Object.keys(gameState.players).map((player, i) => {
-            // console.log(player, i)
-            // console.log(gameState.players)
-
-            if (i + 1 < Object.keys(gameState.players).length && i % 2 === 0) {
+            console.log(player, i)
+            if (i + 1 < gameState.players.length && i % 2 === 0) {
               return (
                 <div className="flex-container">
                   <div className="player1" style={{ visibility: 'visible' }}>
-                    <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
+                    <img className="waitingGif" src={gifs[i]} alt="waiting" />
                     <h3
                       className="playerCount"
                       style={{ fontFamily: 'Abril Fatface' }}
                     >
-                      {player}
+                      {gameState.players[i].name}
                     </h3>
                   </div>
                   <div className="player2" style={{ visibility: 'visible' }}>
-                    <img className="waitingGif" src={gifs[gameState.players[Object.keys(gameState.players)[i+1]].character]} alt="waiting" />
+                    <img className="waitingGif" src={gifs[i + 1]} alt="waiting" />
                     <h3
                       className="playerCount"
                       style={{ fontFamily: 'Abril Fatface' }}
                     >
-                      {Object.keys(gameState.players)[i+1]}
+                      {gameState.players[i + 1].name}
                     </h3>
                   </div>
                 </div>
               )
-            } else if (i  === Object.keys(gameState.players).length -1 && i % 2 === 0) {
+            } else {
               return (
                 <div className="flex-container">
                   <div className="player1" style={{ visibility: player.joined }}>

@@ -16,7 +16,8 @@ class Game {
 
     this.gameHistory = {}
     this.gameHistory[0] = []
-    this.userNameToWins = {}
+    
+    this.usernameToWins = {}
     this.isPrivate = isPrivate
 
     // Generate a random song with 6 notes
@@ -26,16 +27,16 @@ class Game {
   }
 
   // TODO: use this?
-  start() {
+  /*start() {
     // Set timer to call update method 60 times / second 
-    setInterval(this.update.bind(this), 1000 / 60);
-  }
+    this.intervalId = setInterval(this.update.bind(this), 1000 / 60);
+  }*/
 
   addPlayer(username, socketId) {
     // Pick a random character and remove it from the array of available characters
     const character = this.availableCharacters[Math.floor(Math.random()*this.availableCharacters.length)]
     this.availableCharacters = this.availableCharacters.filter(function(ele){ return ele != character })
-
+    this.usernameToWins[username] = 0
     this.players[username] = new Player(username, character)
     this.socketIdToUsername[socketId] = username
   }
@@ -59,9 +60,13 @@ class Game {
     const player = this.players[username]
     if (player != null && player.setPosition(position, seconds)) {
       this.gameHistory[this.gameIndex].push(player.username)
+      if (this.gameHistory[this.gameIndex].length == 1) {
+        this.usernameToWins[username]++
+      }
       return true
     }
     this.players[username] = player
+    return false
   }
 
   update() {
@@ -74,6 +79,15 @@ class Game {
 
     // Send a game update to each player 
     this.gameSocket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, this.createGameWithoutSocket())
+  }
+
+  reset() {
+    this.gameIndex++
+    this.gameHistory[this.gameIndex] = []
+    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
+    for (const [username, player] of Object.entries(this.players)) {
+      player.reset()
+    }
   }
 
   // Create game object to send to the client

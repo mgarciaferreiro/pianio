@@ -50,7 +50,7 @@ function Game({gameState, song, name}) {
     const [seconds, setSeconds] = useState(0)
     const [isActive, setIsActive] = useState(true)
     // console.log(board)
-    
+
     useEffect(() => {
       // Start timer
       let interval = null;
