@@ -32,5 +32,6 @@ export const leaveLobby = () => {
 }
 
 export const restartGame = (gameId) => {
+  console.log('sending restart game request')
   socket.emit(Constants.MSG_TYPES.RESTART_GAME_REQUEST, gameId)
 }

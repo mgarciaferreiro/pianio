@@ -39,4 +39,4 @@ module.exports = Object.freeze({
       FINISH_GAME: 'finish_game',
       LEAVE_LOBBY_REQUEST: 'leave_lobby_request',
     },
-});
+}); 

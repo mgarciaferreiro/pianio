@@ -56,13 +56,12 @@ function App() {
     })
 
     socket.on(Constants.MSG_TYPES.GAME_WON, game => {
-      console.log("IN HERE SOMEHOW??S?S?S")
       setGameState(game)
       navigate('/Victory')
     })
 
     socket.on(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, (game) => {
-      console.log("IN RESTARTGAMERESPONSE%!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@$")
+      console.log("received restart game response from server")
       console.log(game)
       navigate('/Lobby')
       setGameState(game)
