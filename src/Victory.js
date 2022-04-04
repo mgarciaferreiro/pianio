@@ -30,33 +30,37 @@ function Victory({ gameState, name }) {
   return (
     <div className="app">
       <p className="victoryTitle" style={{ fontFamily: 'Abril Fatface' }}>
-        {gameState.gameHistory[gameState.gameIndex][0]} Finished 1st
+        {gameState.gameHistory[gameState.gameIndex][0]} finished 1st
       </p>
       <img
         className="victoryGif"
-        src={gifs[gameState.players[gameState.gameHistory[gameState.gameIndex][0]].character]}
+        src={
+          gifs[
+            gameState.players[gameState.gameHistory[gameState.gameIndex][0]]
+              .character
+          ]
+        }
         alt="waiting"
       />
 
       <p className="subtitle" style={{ fontFamily: 'Abril Fatface' }}>
-        with {gameState.players[gameState.gameHistory[gameState.gameIndex][0]].seconds / 10}s
+        with{' '}
+        {gameState.players[gameState.gameHistory[gameState.gameIndex][0]]
+          .seconds / 10}
+        s
       </p>
-      { 
-      
-      gameState.gameHistory[gameState.gameIndex].map(
-        (playerUsername, i) => {
-          return (
-            <div className="text" style={{ fontFamily: 'Abril Fatface' }}>
-              <li>
-                {playerUsername}: {gameState.players[playerUsername].seconds / 10}s
-              </li>
-              <br/>
-            </div>
-          )
-        }
-      )}
+      <div className="leaderboardDiv">
 
-      <ol></ol>
+      {gameState.gameHistory[gameState.gameIndex].map((playerUsername, i) => {
+        return (
+          <p className="leaderboardItem">
+            {i + 1}. &nbsp;<strong>{playerUsername}:</strong>{' '}
+            {gameState.players[playerUsername].seconds / 10}s
+          </p>
+        )
+      })}
+      </div>
+
       <br />
       <div className="App">
         {gameState.host === name && (

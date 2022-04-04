@@ -2,15 +2,10 @@ const Constants = require('../src/shared/constants');
 const Player = require('./player');
 class Game {
 
-  constructor(host, gameId, gameSocket) {
+  constructor(host, gameId, gameSocket, isPrivate) {
     this.players = {} //maps player name to player object
     this.host = host
     
-//     // Generate a random song with 5 notes
-//     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 5));
-//     console.log(this.song)
-//     this.lastUpdateTime = Date.now();
-//     this.shouldSendUpdate = false;
     this.gameId = gameId
     this.availableCharacters = ["minnie", "mickey", "donald", "goofy", "tom", "berlioz"]
 
@@ -21,11 +16,14 @@ class Game {
 
     this.gameHistory = {}
     this.gameHistory[0] = []
+    
     this.usernameToWins = {}
-    this.intervalId = ''
+    this.isPrivate = isPrivate
 
     // Generate a random song with 6 notes
-    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
+    this.songIndex = Object.keys(Constants.SONGS)[Math.floor(Math.random() * Object.keys(Constants.SONGS).length)]
+    const songLength = (Constants.SONGS[this.songIndex]).length
+    this.song = Array.from({length: songLength}, () =>  Math.floor(Math.random() * 6))
   }
 
   // TODO: use this?
@@ -44,10 +42,10 @@ class Game {
   }
 
   removePlayer(socketId) {
-    console.log("in remove player " + socketId)
-    console.log(this.players)
-    console.log(this.socketIdToUsername)
-    if (socketId in this.socketIdToUsername) {
+    // console.log("in remove player " + socketId)
+    // console.log(this.players)
+    // console.log(this.socketIdToUsername)
+    if (socketId in this.socketIdToUsername && this.socketIdToUsername[socketId] in this.players) {
       const character = this.players[this.socketIdToUsername[socketId]].getCharacter()
       this.availableCharacters.push(character)
       delete this.players[this.socketIdToUsername[socketId]]
@@ -60,14 +58,13 @@ class Game {
 
   setPosition(username, position, seconds) {
     const player = this.players[username]
-    if (player.setPosition(position, seconds)) {
+    if (player != null && player.setPosition(position, seconds)) {
       this.gameHistory[this.gameIndex].push(player.username)
       if (this.gameHistory[this.gameIndex].length == 1) {
         this.usernameToWins[username]++
       }
       return true
     }
-
     this.players[username] = player
     return false
   }
@@ -84,35 +81,26 @@ class Game {
     this.gameSocket.to(this.gameId).emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, this.createGameWithoutSocket())
   }
 
-  // Create update to send to the client
-  /*createUpdate() {
-    return {
-      players: this.players.map((name, playerObj) => p.serializeForUpdate()),
-      host: this.host,
-      gameId: this.gameId
-    }
-  }
-*/
   reset() {
     this.gameIndex++
     this.gameHistory[this.gameIndex] = []
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
-    clearInterval(this.intervalId)
     for (const [username, player] of Object.entries(this.players)) {
       player.reset()
     }
   }
 
+  // Create game object to send to the client
   createGameWithoutSocket() {
     return {
       players: this.players,
       host: this.host,
       gameId: this.gameId,
       socketIdToUsername: this.socketIdToUsername,
-      song: this.song,
       gameHistory: this.gameHistory,
       gameIndex: this.gameIndex,
-      usernameToWins: this.usernameToWins
+      usernameToWins: this.usernameToWins,
+      songIndex: this.songIndex,
     }
   }
 }
