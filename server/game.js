@@ -21,23 +21,24 @@ class Game {
 
     this.gameHistory = {}
     this.gameHistory[0] = []
-    this.userNameToWins = {}
+    this.usernameToWins = {}
+    this.intervalId = ''
 
     // Generate a random song with 6 notes
     this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
   }
 
   // TODO: use this?
-  start() {
+  /*start() {
     // Set timer to call update method 60 times / second 
-    setInterval(this.update.bind(this), 1000 / 60);
-  }
+    this.intervalId = setInterval(this.update.bind(this), 1000 / 60);
+  }*/
 
   addPlayer(username, socketId) {
     // Pick a random character and remove it from the array of available characters
     const character = this.availableCharacters[Math.floor(Math.random()*this.availableCharacters.length)]
     this.availableCharacters = this.availableCharacters.filter(function(ele){ return ele != character })
-
+    this.usernameToWins[username] = 0
     this.players[username] = new Player(username, character)
     this.socketIdToUsername[socketId] = username
   }
@@ -61,10 +62,14 @@ class Game {
     const player = this.players[username]
     if (player.setPosition(position, seconds)) {
       this.gameHistory[this.gameIndex].push(player.username)
+      if (this.gameHistory[this.gameIndex].length == 1) {
+        this.usernameToWins[username]++
+      }
       return true
     }
 
     this.players[username] = player
+    return false
   }
 
   update() {
@@ -88,6 +93,16 @@ class Game {
     }
   }
 */
+  reset() {
+    this.gameIndex++
+    this.gameHistory[this.gameIndex] = []
+    this.song = Array.from({length: Constants.SONG_LENGTH}, () =>  Math.floor(Math.random() * 6))
+    clearInterval(this.intervalId)
+    for (const [username, player] of Object.entries(this.players)) {
+      player.reset()
+    }
+  }
+
   createGameWithoutSocket() {
     return {
       players: this.players,

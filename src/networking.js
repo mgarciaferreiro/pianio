@@ -25,3 +25,7 @@ export const startGame = (gameId) => {
 export const leaveLobby = () => {
   socket.emit(Constants.MSG_TYPES.LEAVE_LOBBY_REQUEST)
 }
+
+export const restartGame = (gameId) => {
+  socket.emit(Constants.MSG_TYPES.RESTART_GAME_REQUEST, gameId)
+}

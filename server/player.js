@@ -9,6 +9,12 @@ class Player {
       this.seconds = 0
     }
 
+    reset() {
+      this.position = 0
+      this.seconds = 0
+      this.isFinished = false
+    }
+
     setPosition(position, seconds) {
       this.position = position
       this.seconds = seconds
