@@ -11,7 +11,6 @@ import berlioz from './gifs/berlioz.gif'
 import { useNavigate } from "react-router-dom";
 import Session from 'react-session-api'
 
-
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { startGame, leaveLobby } from './networking'
 
@@ -22,7 +21,6 @@ function Lobby({gameState, name}) {
   let navigate = useNavigate()
 
   const clickedStartGame = () => {
-    console.log(gameState.gameId)
     navigate('/Game')
     startGame(gameState.gameId)
   }
@@ -67,7 +65,7 @@ function Lobby({gameState, name}) {
   
         {
           Object.keys(gameState.players).map((player, i) => {
-            console.log(player, i)
+            // console.log(player, i)
             if (i + 1 < gameState.players.length && i % 2 === 0) {
               return (
                 <div className="flex-container">

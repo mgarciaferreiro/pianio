@@ -18,53 +18,60 @@ function App() {
   const [gameState, setGameState] = useState(null)
   const [song, setSong] = useState([])
   const [name, setName] = useState('')
+  const [leaderboard, setLeaderboard] = useState('')
 
   useEffect(() => {
+    // getLeaderboard()
     socket.on('connect', () => {
       setIsConnected(true)
-    });
+    })
     socket.on('disconnect', () => {
       socket.emit(Constants.MSG_TYPES.DISCONNECTED)
       setIsConnected(false)
-    });
+    })
     socket.on(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, (game, song) => {
       console.log('Created game with ID ' + game.gameId)
       console.log(game)
       setGameState(game)
       setSong(Array.from(song))
       navigate('/Lobby')
-    });
+    })
     socket.on(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game => {
       console.log('Player joined game ' + game.gameId)
       setGameState(game)
-    });
+    })
     socket.on(Constants.MSG_TYPES.JOIN_GAME_SUCCESS, (game, song) => {
       console.log('Joined game successfully')
       setGameState(game)
       setSong(song)
       navigate('/Lobby')
-    });
+    })
     socket.on(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game => {
-      console.log('Received game update');
+      // console.log('Received game update');
       setGameState(game)
-    });
+    })
     socket.on(Constants.MSG_TYPES.START_GAME_RESPONSE, () => {
       navigate('/Game')
-    });
+    })
     socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_RESPONSE, () => {
       navigate('/')
     })
-
+    socket.on(Constants.MSG_TYPES.START_GAME_RESPONSE, () => {
+      navigate('/Game')
+    })
     socket.on(Constants.MSG_TYPES.GAME_WON, game => {
       setGameState(game)
       navigate('/Victory')
     })
-
     socket.on(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, (game) => {
       console.log("received restart game response from server")
       console.log(game)
       navigate('/Lobby')
       setGameState(game)
+    })
+    socket.on(Constants.MSG_TYPES.LEADERBOARD_RESPONSE, leaderboard => {
+      console.log('Leaderboard: ' + leaderboard)
+      setLeaderboard(leaderboard)
     })
     return () => {
       socket.off('connect');
@@ -77,18 +84,16 @@ function App() {
       socket.off(Constants.MSG_TYPES.START_GAME_RESPONSE)
       socket.off(Constants.MSG_TYPES.LEAVE_LOBBY_RESPONSE)
       socket.off(Constants.MSG_TYPES.GAME_WON)
+      socket.off(Constants.MSG_TYPES.RESTART_GAME_RESPONSE)
+      socket.off(Constants.MSG_TYPES.LEADERBOARD_RESPONSE)
     };
   });
 
   return (
     <CookiesProvider>
-
     <div>
-      {/* <header className="App-header">
-        <p>Connected: { '' + isConnected }</p>
-      </header> */}
       <Routes>
-        <Route path="/" element={<Home name={name} setName={setName}/>} />
+        <Route path="/" element={<Home name={name} setName={setName} leaderboard={leaderboard}/>} />
         <Route path="/lobby" element={<Lobby gameState={gameState} name={name}/>} />
         <Route path="/game" element={<Game gameState={gameState} song={song} name={name}/>} />
         <Route path="/victory" element={<Victory gameState={gameState} name={name}/>} />

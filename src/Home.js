@@ -4,13 +4,13 @@ import WebFont from 'webfontloader'
 import Lobby from './Lobby'
 import React, { useState, useEffect } from 'react'
 import Constants from './shared/constants'
-import { createGame, joinGame, joinRandomGame } from './networking'
+import { createGame, joinGame, joinRandomGame, getLeaderboard } from './networking'
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import Session from 'react-session-api'
 
-function Home({ name, setName }) {
+function Home({ name, setName, leaderboard }) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
   const [showLeaderboard, setShowLeaderboard] = useState(false)
@@ -62,16 +62,9 @@ function Home({ name, setName }) {
 
   useEffect(() => {
     console.log(Session.get('Name'))
-
     setName(cookies.Name)
-    // socket.on(Constants.MSG_TYPES.JOIN_GAME_RESPONSE, res => {
-    //   console.log('IN SOCKET ENDPT CLIENT JOIN')
-    //   if (res.status == 'success') {
-    //     console.log('client join success')
-    //   } else {
-    //     console.log('client join fail')
-    //   }
-    // })
+    getLeaderboard()
+
     socket.on(Constants.MSG_TYPES.JOIN_GAME_FAILURE, e => {
       console.log(e)
       setErrorMessage(e)
@@ -129,22 +122,13 @@ function Home({ name, setName }) {
 
       {showLeaderboard && (
         <div className="leaderboardDiv">
-          <p className="leaderboardTitle">Top Scorers of the Day</p>
-          <p className="leaderboardItem">
-            <strong>Andri:</strong> 24.4s
-          </p>
-          <p className="leaderboardItem">
-            <strong>Amy:</strong> 27.3s
-          </p>
-          <p className="leaderboardItem">
-            <strong>Xavier:</strong> 36.1s
-          </p>
-          <p className="leaderboardItem">
-            <strong>Marta:</strong> 44.3s
-          </p>
-          <p className="leaderboardItem">
-            <strong>Jack:</strong> 52.2s
-          </p>
+          <p className="leaderboardTitle">Top Scorers</p>
+          {Object.keys(leaderboard).map((item, i) => 
+            <p className="leaderboardItem" key={i}>
+              <strong>{leaderboard[i][0]}:</strong> {leaderboard[i][1]}s
+            </p>
+            )}
+          
           <button
             className="backButton"
             style={{ marginTop: '5%' }}

@@ -1,5 +1,6 @@
 const Game = require('./game');
 const Constants = require('../src/shared/constants');
+const fs = require('fs');
 
 const io = require('socket.io')({
     cors: {
@@ -20,7 +21,6 @@ io.on('connection', socket => {
     onDisconnect(socket));
   socket.on(Constants.MSG_TYPES.DISCONNECTED, () => 
     onDisconnect(socket));
-  // TODO: register the other functions
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
     joinGame(username, gameId, socket));
   socket.on(Constants.MSG_TYPES.JOIN_RANDOM_GAME_REQUEST, (username) => 
@@ -31,9 +31,8 @@ io.on('connection', socket => {
   socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_REQUEST, () =>
     onDisconnect(socket));
   socket.on(Constants.MSG_TYPES.RESTART_GAME_REQUEST, (gameId) => restartGame(gameId, socket))
-  // socket.on(Constants.MSG_TYPES.RESTART_GAME, restartGame);
-  // socket.on(Constants.MSG_TYPES.GET_OVERALL_LEADERBOARD, getOverallLeaderboard);
-
+  socket.on(Constants.MSG_TYPES.LEADERBOARD_REQUEST, () => 
+    getLeaderboard(socket));
 });
 
 io.listen(3001);
@@ -98,8 +97,6 @@ function createGame(hostName, socket, isPrivate) {
   socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket(), game.song); //emit to client
 }
 
-// TODO: test and add back these functions
-
 function joinGame(username, gameId, socket) {
   console.log('Joining game ' + gameId + username)
   if (!(gameId in games)) {
@@ -118,10 +115,10 @@ function joinGame(username, gameId, socket) {
 }
 
 function updateGame(username, position, gameId, seconds, socket) {
-  console.log('Updating game ' + gameId + username + position)
   game = games[gameId];
   if (game.setPosition(username, position, seconds)) {
-    // console.log(game.createGameWithoutSocket())
+    // Game finished, update leaderboard and emit to client
+    updateLeaderboard(username, seconds / 10)
     socket.emit(Constants.MSG_TYPES.GAME_WON, game.createGameWithoutSocket())
   }
   socket.emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket())
@@ -130,9 +127,6 @@ function updateGame(username, position, gameId, seconds, socket) {
 
 function startGame(gameId, socket) {
   console.log('Starting game ' + gameId)
-  //const game = games[gameId];
-  //game.start();
-  //socket.emit(Constants.MSG_TYPES.START_GAME_RESPONSE)
   socket.to(gameId).emit(Constants.MSG_TYPES.START_GAME_RESPONSE);
 }
 
@@ -155,10 +149,45 @@ function restartGame(gameId, socket) {
   socket.to(gameId).emit(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, game.createGameWithoutSocket());
 }
 
-// function getOverallLeaderboard(gameId) {
-//   const game = games[gameId];
-//   game.updateOverallLeaderboard();
-//   this.to(gameId).emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
-//   this.emit(Constants.MSG_TYPES.FINISH_GAME, game.overallLeaderboard);
+function getLeaderboard(socket) {
+  fs.readFile('leaderboard.txt', function(err, data) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    leaderboard = JSON.parse(data)
+    socket.emit(Constants.MSG_TYPES.LEADERBOARD_RESPONSE, leaderboard)
+  })
+}
 
-// }
+function updateLeaderboard(username, seconds) {
+  fs.readFile('leaderboard.txt', function(err, data) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    leaderboard = JSON.parse(data)
+    newLeaderboard = []
+    let update = false
+    if (leaderboard) {
+      leaderboard.forEach((item, i) => {
+        if (seconds < leaderboard[i][1] && !update) {
+          newLeaderboard.push([username, seconds])
+          update = true
+        }
+        newLeaderboard.push([leaderboard[i][0], leaderboard[i][1]])
+      })
+    }
+    if (!update && newLeaderboard.length < 10) {
+      newLeaderboard.push([username, seconds])
+      update = true
+    }
+    if (newLeaderboard.length > 10) {newLeaderboard.pop()}
+    if (update) {
+      console.log("Updating leaderboard: " + JSON.stringify(newLeaderboard))
+      fs.writeFile('leaderboard.txt', JSON.stringify(newLeaderboard), function (err) {
+        if (err) {console.error(err)}
+      })
+    }
+  })
+}

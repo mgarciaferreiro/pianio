@@ -22,7 +22,6 @@ function Victory({ gameState, name }) {
     })
   }, [])
 
-
   const clickedRestart = () => {
     restartGame(gameState.gameId)
   }
@@ -53,7 +52,7 @@ function Victory({ gameState, name }) {
 
       {gameState.gameHistory[gameState.gameIndex].map((playerUsername, i) => {
         return (
-          <p className="leaderboardItem">
+          <p className="leaderboardItem" key={i}>
             {i + 1}. &nbsp;<strong>{playerUsername}:</strong>{' '}
             {gameState.players[playerUsername].seconds / 10}s
           </p>

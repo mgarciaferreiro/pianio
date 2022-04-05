@@ -18,7 +18,7 @@ export const joinRandomGame = (username) => {
 } 
 
 export const sendUpdate = (username, position, gameId, seconds) => {
-  console.log('Sending game update ' + gameId + username + position + socket.id + seconds);
+  // console.log('Sending game update ' + gameId + username + position + socket.id + seconds);
   socket.emit(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, username, position, gameId, seconds);
 }
 
@@ -34,4 +34,9 @@ export const leaveLobby = () => {
 export const restartGame = (gameId) => {
   console.log('sending restart game request')
   socket.emit(Constants.MSG_TYPES.RESTART_GAME_REQUEST, gameId)
+}
+
+export const getLeaderboard = () => {
+  console.log('sending leaderboard request')
+  socket.emit(Constants.MSG_TYPES.LEADERBOARD_REQUEST)
 }
