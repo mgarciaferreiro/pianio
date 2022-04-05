@@ -39,8 +39,10 @@ function Lobby({gameState, name}) {
       },
     })
   }, [])
+  console.log(gameState)
 
   return (
+    
 <div>
 {Session.get("Name") !== undefined &&
         <div>
@@ -63,35 +65,37 @@ function Lobby({gameState, name}) {
           </div>
         )}
   
-        {
+  {
           Object.keys(gameState.players).map((player, i) => {
             // console.log(player, i)
-            if (i + 1 < gameState.players.length && i % 2 === 0) {
+            // console.log(gameState.players)
+
+            if (i + 1 < Object.keys(gameState.players).length && i % 2 === 0) {
               return (
-                <div className="flex-container">
+                <div className="flex-container" key={i}>
                   <div className="player1" style={{ visibility: 'visible' }}>
-                    <img className="waitingGif" src={gifs[i]} alt="waiting" />
+                    <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
                     <h3
                       className="playerCount"
                       style={{ fontFamily: 'Abril Fatface' }}
                     >
-                      {gameState.players[i].name}
+                      {player}
                     </h3>
                   </div>
                   <div className="player2" style={{ visibility: 'visible' }}>
-                    <img className="waitingGif" src={gifs[i + 1]} alt="waiting" />
+                    <img className="waitingGif" src={gifs[gameState.players[Object.keys(gameState.players)[i+1]].character]} alt="waiting" />
                     <h3
                       className="playerCount"
                       style={{ fontFamily: 'Abril Fatface' }}
                     >
-                      {gameState.players[i + 1].name}
+                      {Object.keys(gameState.players)[i+1]}
                     </h3>
                   </div>
                 </div>
               )
-            } else {
+            } else if (i  === Object.keys(gameState.players).length -1 && i % 2 === 0) {
               return (
-                <div className="flex-container">
+                <div className="flex-container" key={i}>
                   <div className="player1" style={{ visibility: player.joined }}>
                     <img className="waitingGif" src={gifs[gameState.players[player].character]} alt="waiting" />
                     <h3
@@ -109,8 +113,6 @@ function Lobby({gameState, name}) {
             }
           })}
       </div>
-
-
     } 
     </div>
     

@@ -19,6 +19,7 @@ import { sendUpdate } from './networking'
 import Constants from './shared/constants'
 import { useNavigate } from 'react-router-dom'
 import Session from 'react-session-api'
+import plus1 from './images/plus1.png'
 
 const numKeys = 6
 const letters = ['D', 'F', 'G', 'H', 'J', 'K']
@@ -49,6 +50,9 @@ function Game({gameState, song, name}) {
     const [board, setBoard] = useState(getBoardAtPosition(song, 0))
     const [seconds, setSeconds] = useState(0)
     const [isActive, setIsActive] = useState(true)
+    const [timeColor, setTimeColor] = useState("black")
+    const [display1, setDisplay1] = useState("none")
+
     // console.log(board)
 
     useEffect(() => {
@@ -66,9 +70,10 @@ function Game({gameState, song, name}) {
   
     const handleKeyPress = (event) => {
         const tilePressed = letters.indexOf(event.key.toUpperCase())
-        if (tilePressed === -1) return
         const correctTile = song[position]
+
         if (tilePressed === correctTile) {
+          setDisplay1("none")
           playNote()
           if (position === song.length-1) {
               setHasWon(true)
@@ -79,8 +84,10 @@ function Game({gameState, song, name}) {
           sendUpdate(name, position + 1, gameState.gameId, seconds)
           setPosition(position + 1)
         } else {
+            setDisplay1("")
             setSeconds(seconds+10)
-            setHasLost(true)
+            setTimeout(() => {setDisplay1('none')}, 200)
+            // setHasLost(true)
         }
     }
 
@@ -142,8 +149,14 @@ function Game({gameState, song, name}) {
     }, [handleKeyPress])
     return (
         <div className="flex-container">
+          {/* <div style={{backgroundColor:"white"}} >
+            <p style={{color:"red", fontSize:"100px", fontWeight: 'bold', }}>
+              +1
+            </p>
+          </div> */}
           <div className="piano">
-          <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
+          <p className="timer" style={{color:timeColor}}>{Number(seconds / 10).toFixed(1)}s</p>
+            <img src={plus1} style ={{display: display1}} className ="plusOne"alt="s"/>
             {board.map((row, i) => (
               <div key={i} className="row">
                 { row.map((col, j) => (
