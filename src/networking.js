@@ -2,9 +2,9 @@ import { socket } from './App';
 const Constants = require('./shared/constants');
 
 
-export const createGame = (hostName) => {
+export const createGame = (hostName, numKeys) => {
   console.log('Creating game request ' + hostName + socket.id);
-  socket.emit(Constants.MSG_TYPES.CREATE_GAME_REQUEST, hostName);
+  socket.emit(Constants.MSG_TYPES.CREATE_GAME_REQUEST, hostName, numKeys);
 }
 
 export const joinGame = (username, gameId) => {
@@ -12,9 +12,9 @@ export const joinGame = (username, gameId) => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME_REQUEST, username, gameId);
 }
 
-export const joinRandomGame = (username) => {
+export const joinRandomGame = (username, difficulty) => {
   console.log('Join random game request ' + username + socket.id);
-  socket.emit(Constants.MSG_TYPES.JOIN_RANDOM_GAME_REQUEST, username);
+  socket.emit(Constants.MSG_TYPES.JOIN_RANDOM_GAME_REQUEST, username, difficulty);
 } 
 
 export const sendUpdate = (username, position, gameId, seconds) => {

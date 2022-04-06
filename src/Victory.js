@@ -1,7 +1,6 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import WebFont from 'webfontloader'
-import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import minnie from './gifs/minnie.gif'
 import mickey from './gifs/mickey.gif'

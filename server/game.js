@@ -2,7 +2,7 @@ const Constants = require('../src/shared/constants');
 const Player = require('./player');
 class Game {
 
-  constructor(host, gameId, gameSocket, isPrivate) {
+  constructor(host, gameId, gameSocket, isPrivate, numKeys) {
     this.players = {} //maps player name to player object
     this.host = host
     
@@ -20,10 +20,17 @@ class Game {
     this.usernameToWins = {}
     this.isPrivate = isPrivate
 
+    this.keys = ['D', 'F', 'G', 'H', 'J', 'K']
+    if (numKeys == Constants.EASY) {
+      this.keys = ['F', 'G', 'H', 'J']
+    } else if (numKeys == Constants.HARD) {
+      this.keys = ['S', 'D', 'F', 'G', 'H', 'J', 'K', 'L']
+    }
+
     // Generate a random song with 6 notes
     this.songIndex = Object.keys(Constants.SONGS)[Math.floor(Math.random() * Object.keys(Constants.SONGS).length)]
     const songLength = (Constants.SONGS[this.songIndex]).length
-    this.song = Array.from({length: songLength}, () =>  Math.floor(Math.random() * 6))
+    this.song = Array.from({length: songLength}, () =>  Math.floor(Math.random() * numKeys))
   }
 
   // TODO: use this?
@@ -101,6 +108,7 @@ class Game {
       gameIndex: this.gameIndex,
       usernameToWins: this.usernameToWins,
       songIndex: this.songIndex,
+      keys: this.keys
     }
   }
 }

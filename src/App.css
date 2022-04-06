@@ -147,7 +147,8 @@ li {
   background: #C7C7C7;
   box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.41);
   border-radius: 3px;
-  height:30px;
+  height:31px;
+  width:150px;
   padding:5px;
   padding-left: 10px;
 }
@@ -169,11 +170,15 @@ li {
   color: white;
   border: none;
 }
+
 .joinRoom {
-  background: rgba(156, 133, 25, 0.81);
+  background: rgb(132,114,26);
   height:42px;
-  margin-left:5px;
-  border-radius: 3px;
+  margin-right:5px;
+  margin-left:-3px;
+  border-end-end-radius: 3px;
+  border-start-end-radius: 3px;
+  /* border-radius: 3px; */
   font-family: Arial;
   font-style: normal;
   text-align: center;
@@ -368,11 +373,14 @@ li {
   align-items: center;
   flex-direction: column-reverse;
   height: 100vh;
+  min-width: 900px;
+  /* background-color: purple */
 }
 
 .row {
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 
 .tile {
@@ -380,7 +388,8 @@ li {
   justify-content: center;
   align-items: flex-end;
   height: 30vh;
-  min-width: 120px;
+  width: 100%;
+  /* min-width: 120px; */
   border: 0.5px solid #CECECE;
   color: #CECECE;
   font-size: 20px;
@@ -406,6 +415,7 @@ li {
 .timer {
   position: absolute;
   color: #CFB53B;
+  /* color: black; */
   font-family: Arial;
   font-weight: bold;
   font-size: 60px;
@@ -464,4 +474,41 @@ input {
 .plusOne {
   position: absolute;
   transition: .1s
+}
+
+.dropdownContainer {
+  background: rgb(132,114,26);
+  height:42px;
+  margin-left:10px;
+  margin-right:10px;
+  width:150px;
+  border-radius: 3px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+  margin-top:50px;
+}
+
+.dropdown {
+  background: rgb(132,114,26);
+  border-radius: 3px;
+  height: 40px;
+  font-family: Arial;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: white;
+  border: none;
+}
+
+.dropdown:hover {
+  filter: brightness(80%);
+  transition: .5s;
+}
+
+.arrow {
+  width: 25px;
 }

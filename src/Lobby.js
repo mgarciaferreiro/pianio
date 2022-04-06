@@ -39,7 +39,7 @@ function Lobby({gameState, name}) {
       },
     })
   }, [])
-  console.log(gameState)
+  // console.log(gameState)
 
   return (
     

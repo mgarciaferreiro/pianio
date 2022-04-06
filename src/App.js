@@ -56,9 +56,6 @@ function App() {
     socket.on(Constants.MSG_TYPES.LEAVE_LOBBY_RESPONSE, () => {
       navigate('/')
     })
-    socket.on(Constants.MSG_TYPES.START_GAME_RESPONSE, () => {
-      navigate('/Game')
-    })
     socket.on(Constants.MSG_TYPES.GAME_WON, game => {
       setGameState(game)
       navigate('/Victory')

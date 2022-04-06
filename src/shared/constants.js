@@ -18,6 +18,9 @@ module.exports = Object.freeze({
       SONG7: ['C', 'D', 'Ds', 'G', 'F', 'Ds', 'F', 'Ds', 'D', 'D', 'D', 'D', 'D', 'Ds', 'D', 'C', 'C', 'D', 'Ds', 'G', 'F', 'Ds', 'F', 'Ds', 'D', 'D', 'D', 'D', 'D', 'Ds', 'D', 'C', 'G', 'G', 'G', 'F', 'F', 'Ds', 'F', 'Ds', 'F', 'Ds', 'F', 'Ds', 'C']
     },
     NUM_PLAYERS_MAX: 6,
+    EASY: 4,
+    MEDIUM: 6,
+    HARD: 8,
     MAP_SIZE: 3000,
     MSG_TYPES: {
       JOIN_GAME_REQUEST: 'join_game',

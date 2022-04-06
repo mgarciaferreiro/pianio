@@ -21,11 +21,11 @@ import { useNavigate } from 'react-router-dom'
 import Session from 'react-session-api'
 import plus1 from './images/plus1.png'
 
-const numKeys = 6
-const letters = ['D', 'F', 'G', 'H', 'J', 'K']
+// const numKeys = 6
+// const letters = ['D', 'F', 'G', 'H', 'J', 'K']
 
-const getSongArray = song => {
-  const songArray = Array(song.length).fill().map(() => Array(numKeys).fill(0))
+const getSongArray = (song, keys) => {
+  const songArray = Array(song.length).fill().map(() => Array(keys.length).fill(0))
   for (let i = 0; i < song.length; i++) {
     let blackTileIndex = song[i]
     songArray[i][blackTileIndex] = 1
@@ -33,8 +33,8 @@ const getSongArray = song => {
   return songArray
 }
 
-const getBoardAtPosition = (song, pos) => {
-    const newBoard = Array(3).fill().map(() => Array(numKeys).fill(0));
+const getBoardAtPosition = (song, pos, keys) => {
+    const newBoard = Array(3).fill().map(() => Array(keys.length).fill(0));
     for (let i = 0; i < 3; i++) {
         let blackTileIndex = song[pos + i]
         newBoard[i][blackTileIndex] = 1
@@ -47,10 +47,9 @@ function Game({gameState, song, name}) {
     const [position, setPosition] = useState(0)
     const [hasWon, setHasWon] = useState(false)
     const [hasLost, setHasLost] = useState(false)
-    const [board, setBoard] = useState(getBoardAtPosition(song, 0))
+    const [board, setBoard] = useState(getBoardAtPosition(song, 0, gameState.keys))
     const [seconds, setSeconds] = useState(0)
     const [isActive, setIsActive] = useState(true)
-    const [timeColor, setTimeColor] = useState("black")
     const [display1, setDisplay1] = useState("none")
 
     // console.log(board)
@@ -69,7 +68,7 @@ function Game({gameState, song, name}) {
     }, [isActive, seconds]);
   
     const handleKeyPress = (event) => {
-        const tilePressed = letters.indexOf(event.key.toUpperCase())
+        const tilePressed = gameState.keys.indexOf(event.key.toUpperCase())
         const correctTile = song[position]
 
         if (tilePressed === correctTile) {
@@ -79,7 +78,7 @@ function Game({gameState, song, name}) {
               setHasWon(true)
               setIsActive(false)
           } else {
-              setBoard(getBoardAtPosition(song, position + 1))
+              setBoard(getBoardAtPosition(song, position + 1, gameState.keys))
           }
           sendUpdate(name, position + 1, gameState.gameId, seconds)
           setPosition(position + 1)
@@ -155,14 +154,14 @@ function Game({gameState, song, name}) {
             </p>
           </div> */}
           <div className="piano">
-          <p className="timer" style={{color:timeColor}}>{Number(seconds / 10).toFixed(1)}s</p>
+          <p className="timer">{Number(seconds / 10).toFixed(1)}s</p>
             <img src={plus1} style ={{display: display1}} className ="plusOne"alt="s"/>
             {board.map((row, i) => (
               <div key={i} className="row">
                 { row.map((col, j) => (
                   <div key={j}
                   className={col ? "tile tile-black" : "tile tile-white" }>
-                      {i === 0 ? letters[j] : ''}
+                      {i === 0 ? gameState.keys[j] : ''}
                   </div>
                 ))}
               </div>
@@ -170,7 +169,7 @@ function Game({gameState, song, name}) {
           </div>
           <div className="progressBoard">
             <h3 className="progressText" style={{ fontFamily: 'Abril Fatface' }}>START</h3>
-            {getSongArray(song).map((row, i) => (
+            {getSongArray(song, gameState.keys).map((row, i) => (
               <div key={i} >
                 <div className="row">
                   {row.map((col, j) => (

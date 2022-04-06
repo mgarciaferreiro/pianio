@@ -15,16 +15,16 @@ io.on('connection', socket => {
     console.log(`hello from ${socket.id}`);
   });
 
-  socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName) => createGame(hostName, socket, true));
-
+  socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName, numKeys) => 
+    createGame(hostName, socket, true, numKeys));
   socket.on('disconnect', () => 
     onDisconnect(socket));
   socket.on(Constants.MSG_TYPES.DISCONNECTED, () => 
     onDisconnect(socket));
   socket.on(Constants.MSG_TYPES.JOIN_GAME_REQUEST, (username, gameId) => 
     joinGame(username, gameId, socket));
-  socket.on(Constants.MSG_TYPES.JOIN_RANDOM_GAME_REQUEST, (username) => 
-    joinRandomGame(username, socket));
+  socket.on(Constants.MSG_TYPES.JOIN_RANDOM_GAME_REQUEST, (username, difficulty) => 
+    joinRandomGame(username, socket, difficulty));
   socket.on(Constants.MSG_TYPES.GAME_UPDATE_REQUEST, (username, position, gameId, seconds) => 
     updateGame(username, position, gameId, seconds, socket));
   socket.on(Constants.MSG_TYPES.START_GAME_REQUEST, (gameId) => startGame(gameId, socket));
@@ -77,7 +77,7 @@ function generateGameId() {
     return result;
   }
 
-function createGame(hostName, socket, isPrivate) {
+function createGame(hostName, socket, isPrivate, numKeys) {
   console.log('Creating game ' + hostName)
 
   gameId = generateGameId()
@@ -86,7 +86,7 @@ function createGame(hostName, socket, isPrivate) {
     gameId = generateGameId()
   }
 
-  const game = new Game(hostName, gameId, socket, isPrivate);
+  const game = new Game(hostName, gameId, socket, isPrivate, numKeys);
   game.addPlayer(hostName, socket.id)
 
   games[gameId] = game;
@@ -118,7 +118,7 @@ function updateGame(username, position, gameId, seconds, socket) {
   game = games[gameId];
   if (game.setPosition(username, position, seconds)) {
     // Game finished, update leaderboard and emit to client
-    updateLeaderboard(username, seconds / 10)
+    updateLeaderboard(username, seconds / 10, game.keys.length)
     socket.emit(Constants.MSG_TYPES.GAME_WON, game.createGameWithoutSocket())
   }
   socket.emit(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE, game.createGameWithoutSocket())
@@ -130,15 +130,15 @@ function startGame(gameId, socket) {
   socket.to(gameId).emit(Constants.MSG_TYPES.START_GAME_RESPONSE);
 }
 
-function joinRandomGame(username, socket) {
+function joinRandomGame(username, socket, difficulty) {
   console.log(username + ' called join random game in server')
   for (const [gid, game] of Object.entries(games)) {
-    if (!game.isPrivate && Object.keys(game.players).length < Constants.NUM_PLAYERS_MAX) {
+    if (!game.isPrivate && game.numKeys == difficulty && Object.keys(game.players).length < Constants.NUM_PLAYERS_MAX) {
       joinGame(username, gid, socket)
       return
     }
   }
-  createGame(username, socket, false)
+  createGame(username, socket, false, Constants.difficulty)
 }
 
 function restartGame(gameId, socket) {
@@ -150,7 +150,8 @@ function restartGame(gameId, socket) {
 }
 
 function getLeaderboard(socket) {
-  fs.readFile('leaderboard.txt', function(err, data) {
+  // TODO: show other leaderboards
+  fs.readFile(`leaderboard6.txt`, function(err, data) {
     if (err) {
       console.error(err)
       return
@@ -160,13 +161,16 @@ function getLeaderboard(socket) {
   })
 }
 
-function updateLeaderboard(username, seconds) {
-  fs.readFile('leaderboard.txt', function(err, data) {
+function updateLeaderboard(username, seconds, difficulty) {
+  fs.readFile(`leaderboard${difficulty}.txt`, function(err, data) {
     if (err) {
       console.error(err)
       return
     }
-    leaderboard = JSON.parse(data)
+    let leaderboard = null
+    try {
+      leaderboard = JSON.parse(data)
+    } catch (e) {console.error(e)}
     newLeaderboard = []
     let update = false
     if (leaderboard) {
@@ -185,7 +189,7 @@ function updateLeaderboard(username, seconds) {
     if (newLeaderboard.length > 10) {newLeaderboard.pop()}
     if (update) {
       console.log("Updating leaderboard: " + JSON.stringify(newLeaderboard))
-      fs.writeFile('leaderboard.txt', JSON.stringify(newLeaderboard), function (err) {
+      fs.writeFile(`leaderboard${difficulty}.txt`, JSON.stringify(newLeaderboard), function (err) {
         if (err) {console.error(err)}
       })
     }
