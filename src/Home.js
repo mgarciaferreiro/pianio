@@ -127,6 +127,13 @@ function Home({ name, setName, leaderboard }) {
           >
             Leaderboard
           </button>
+          <br />
+          <button
+            className="backButton"
+            style={{ marginTop: '5%' }}
+            onClick={() => setLoggedIn(false)}>
+            Back
+          </button>
         </div>
       )}
 

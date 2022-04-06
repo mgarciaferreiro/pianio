@@ -27,6 +27,7 @@ function Lobby({gameState, name}) {
 
   const clickedLeaveLobby = () => {
     leaveLobby()
+    navigate('/')
   }
 
   useEffect(() => {
@@ -58,10 +59,7 @@ function Lobby({gameState, name}) {
         {gameState.host !== name && (
           <div>
             <h3>Waiting for {gameState.host} to start the game</h3>
-            <Link to='/'></Link>  
-              <button className="startGame" onClick={() => clickedLeaveLobby(name)}>Leave Lobby</button>
-
-
+              <button className="startGame" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
           </div>
         )}
   
@@ -113,7 +111,10 @@ function Lobby({gameState, name}) {
             }
           })}
       </div>
-    } 
+    }
+    {gameState.host === name && Object.keys(gameState.players).length == 1 &&
+    <button className="startGame" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
+    }
     </div>
     
   )

@@ -193,7 +193,8 @@ li {
 }
 
 .backButton {
-  background: #9c1903;
+  margin: 0 auto;
+  background: rgb(143, 32, 13, 0.80);
   height:42px;
   width: 100px;
   margin-top: 10%;
@@ -208,13 +209,14 @@ li {
 }
 
 .backButton:hover {
-  background: #851603;
-
+  /* background: #851603; */
+  filter: brightness(80%);
   transition: .5s;
 
 }
 .startGame {
   margin: 0 auto;
+  margin-top: 25px;
   display: block;
   background: rgba(156, 133, 25, 0.81);
   height:35px;
@@ -267,7 +269,7 @@ li {
   letter-spacing: 0.05em;
   color: black;
   border: none;
-  margin-top:50px
+  margin-top:20px
 }
 .toggleLeaderboard:hover {
   background: #aba9a9;
