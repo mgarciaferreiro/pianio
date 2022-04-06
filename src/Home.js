@@ -130,21 +130,27 @@ function Home({ name, setName, leaderboard }) {
         </div>
       )}
 
-      {showLeaderboard && (
+      {showLeaderboard && leaderboard && (
+        <div>
         <div className="leaderboardDiv">
-          <p className="leaderboardTitle">Top Scorers</p>
-          {Object.keys(leaderboard).map((item, i) => 
-            <p className="leaderboardItem" key={i}>
-              <strong>{leaderboard[i][0]}:</strong> {leaderboard[i][1]}s
-            </p>
-            )}
-          <button
-            className="backButton"
-            style={{ marginTop: '5%' }}
-            onClick={() => toggleLeaderboard()}
-          >
-            Back
-          </button>
+        {Object.keys(leaderboard).map((key, j) => 
+          <div key={j}>
+            <p className="leaderboardTitle">{key}</p>
+            {leaderboard[key].map((item, i) => 
+              <p className="leaderboardItem" key={i}>
+                <strong>{item[0]}:</strong> {item[1]}s
+              </p>
+              )}
+          </div>
+        )}
+        </div>
+        <button
+          className="backButton"
+          style={{ marginTop: '5%' }}
+          onClick={() => toggleLeaderboard()}
+        >
+          Back
+        </button>
         </div>
       )}
 

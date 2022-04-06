@@ -150,15 +150,22 @@ function restartGame(gameId, socket) {
 }
 
 function getLeaderboard(socket) {
-  // TODO: show other leaderboards
-  fs.readFile(`leaderboard6.txt`, function(err, data) {
-    if (err) {
-      console.error(err)
-      return
+  leaderboards = {}
+  const handler = (difficulty) => function(err, data){
+    if (err){
+      console.error(err);
+    } else {
+      const leaderboard = JSON.parse(data)
+      leaderboards[difficulty] = leaderboard
     }
-    leaderboard = JSON.parse(data)
-    socket.emit(Constants.MSG_TYPES.LEADERBOARD_RESPONSE, leaderboard)
-  })
+    if (Object.keys(leaderboards).length == 3) {
+      socket.emit(Constants.MSG_TYPES.LEADERBOARD_RESPONSE, leaderboards)
+    }
+  }
+
+  fs.readFile('leaderboard4.txt', handler("Easy"))
+  fs.readFile('leaderboard6.txt', handler("Medium"))
+  fs.readFile('leaderboard8.txt', handler("Hard"))
 }
 
 function updateLeaderboard(username, seconds, difficulty) {
@@ -182,11 +189,11 @@ function updateLeaderboard(username, seconds, difficulty) {
         newLeaderboard.push([leaderboard[i][0], leaderboard[i][1]])
       })
     }
-    if (!update && newLeaderboard.length < 10) {
+    if (!update && newLeaderboard.length < 6) {
       newLeaderboard.push([username, seconds])
       update = true
     }
-    if (newLeaderboard.length > 10) {newLeaderboard.pop()}
+    if (newLeaderboard.length > 6) {newLeaderboard.pop()}
     if (update) {
       console.log("Updating leaderboard: " + JSON.stringify(newLeaderboard))
       fs.writeFile(`leaderboard${difficulty}.txt`, JSON.stringify(newLeaderboard), function (err) {

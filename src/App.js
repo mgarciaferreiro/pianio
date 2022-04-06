@@ -67,7 +67,8 @@ function App() {
       setGameState(game)
     })
     socket.on(Constants.MSG_TYPES.LEADERBOARD_RESPONSE, leaderboard => {
-      console.log('Leaderboard: ' + leaderboard)
+      console.log('Leaderboard: ')
+      console.log(leaderboard)
       setLeaderboard(leaderboard)
     })
     return () => {
