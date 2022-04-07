@@ -133,12 +133,13 @@ function startGame(gameId, socket) {
 function joinRandomGame(username, socket, difficulty) {
   console.log(username + ' called join random game in server')
   for (const [gid, game] of Object.entries(games)) {
-    if (!game.isPrivate && game.numKeys == difficulty && Object.keys(game.players).length < Constants.NUM_PLAYERS_MAX) {
+    if (!game.isPrivate && game.keys.length == difficulty 
+      && Object.keys(game.players).length < Constants.NUM_PLAYERS_MAX) {
       joinGame(username, gid, socket)
       return
     }
   }
-  createGame(username, socket, false, Constants.difficulty)
+  createGame(username, socket, false, difficulty)
 }
 
 function restartGame(gameId, socket) {
