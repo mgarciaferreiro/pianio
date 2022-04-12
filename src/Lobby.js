@@ -59,7 +59,7 @@ function Lobby({gameState, name}) {
         {gameState.host !== name && (
           <div>
             <h3>Waiting for {gameState.host} to start the game</h3>
-              <button className="startGame" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
+              <button className="startGameleaveLobby" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
           </div>
         )}
   
@@ -113,7 +113,7 @@ function Lobby({gameState, name}) {
       </div>
     }
     {gameState.host === name && Object.keys(gameState.players).length == 1 &&
-    <button className="startGame" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
+    <button className="startGame leaveLobby" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
     }
     </div>
     

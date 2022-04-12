@@ -107,7 +107,7 @@
 }
 .leaderboardItem {
   margin-top: 1%;
-  font-size: 16px;
+  /* font-size: 16px; */
   color: #A1A1A1;
 }
 
@@ -180,10 +180,11 @@ li {
   background: rgb(132,114,26);
   height:42px;
   margin-right:5px;
-  margin-left:-3px;
+  margin-left:5px;
+  /* margin-left:-3px;
   border-end-end-radius: 3px;
-  border-start-end-radius: 3px;
-  /* border-radius: 3px; */
+  border-start-end-radius: 3px; */
+  border-radius: 3px;
   font-family: Arial;
   font-style: normal;
   text-align: center;
@@ -194,7 +195,8 @@ li {
 
 .backButton {
   margin: 0 auto;
-  background: rgb(143, 32, 13, 0.80);
+  background: rgb(131, 131, 131, 0.36);
+  /* background: rgb(143, 32, 13, 0.80); */
   height:42px;
   width: 100px;
   margin-top: 10%;
@@ -234,6 +236,10 @@ li {
 .startGame:hover {
   filter: brightness(80%);
   transition: .5s;
+}
+
+.leaveLobby {
+  background: rgb(131, 131, 131, 0.36);
 }
 
 .play:hover {

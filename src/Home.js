@@ -5,15 +5,15 @@ import React, { useState, useEffect } from 'react'
 import Constants from './shared/constants'
 import { createGame, joinGame, joinRandomGame, getLeaderboard } from './networking'
 import { socket } from './App'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import Session from 'react-session-api'
 import Dropdown from './Dropdown'
 
 function Home({ name, setName, leaderboard }) {
+  const navigate = useNavigate()
   const [loggedIn, setLoggedIn] = useState(false)
   const [clickedJoin, setClickedJoin] = useState(false)
-  const [showLeaderboard, setShowLeaderboard] = useState(false)
   // const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
   const [cookies, setCookie] = useCookies(['user'])
   const [difficulty, setDifficulty] = useState(Constants.MEDIUM)
@@ -43,12 +43,6 @@ function Home({ name, setName, leaderboard }) {
 
   const toggleJoiningRoom = () => {
     setJoiningRoom(!joiningRoom)
-    setLoggedIn(!loggedIn)
-    setErrorMessage('')
-  }
-
-  const toggleLeaderboard = () => {
-    setShowLeaderboard(!showLeaderboard)
     setLoggedIn(!loggedIn)
     setErrorMessage('')
   }
@@ -85,7 +79,7 @@ function Home({ name, setName, leaderboard }) {
         peean.io
       </p>
       <p className="blurb">race to play piano tiles with your keyboard</p>
-      {!loggedIn && !joiningRoom && !showLeaderboard && (
+      {!loggedIn && !joiningRoom && (
         <div>
           <form onSubmit={() => checkName()}>
             <input
@@ -100,13 +94,15 @@ function Home({ name, setName, leaderboard }) {
               Play
             </button>
           </form>
+          <br />
+          <br />
         </div>
       )}
 
       {loggedIn && (
         <div>
           <Dropdown
-            title="Create Game"
+            title="Create Room"
             options={[
               { label: 'Easy', value: Constants.EASY },
               { label: 'Medium', value: Constants.MEDIUM },
@@ -120,44 +116,12 @@ function Home({ name, setName, leaderboard }) {
             Find a Room
           </button>
           <br />
-          <br />
-          <button
-            className="toggleLeaderboard"
-            onClick={() => toggleLeaderboard()}
-          >
-            Leaderboard
-          </button>
-          <br />
           <button
             className="backButton"
             style={{ marginTop: '5%' }}
             onClick={() => setLoggedIn(false)}>
             Back
           </button>
-        </div>
-      )}
-
-      {showLeaderboard && leaderboard && (
-        <div>
-        <div className="leaderboardDiv">
-        {Object.keys(leaderboard).map((key, j) => 
-          <div key={j}>
-            <p className="leaderboardTitle">{key}</p>
-            {leaderboard[key].map((item, i) => 
-              <p className="leaderboardItem" key={i}>
-                <strong>{item[0]}:</strong> {item[1]}s
-              </p>
-              )}
-          </div>
-        )}
-        </div>
-        <button
-          className="backButton"
-          style={{ marginTop: '5%' }}
-          onClick={() => toggleLeaderboard()}
-        >
-          Back
-        </button>
         </div>
       )}
 
@@ -184,17 +148,34 @@ function Home({ name, setName, leaderboard }) {
             onChange={(e) => setDifficulty(e.target.value)}
             onClick={() => joinRandomGame(name, difficulty)}
           />
-          {/* <button className="joinRoom" onClick={() => joinRandomGame(name)}>
-            Random Room
-          </button> */}
-          <br />
-          <button className="backButton" onClick={() => toggleJoiningRoom()}>
+          <br/>
+          <button className="backButton" style={{ marginTop: '5%' }}
+            onClick={() => toggleJoiningRoom()}>
             Back
           </button>
         </div>
       )}
 
       <p className="error">{errorMessage}</p>
+
+      {leaderboard && (
+        <div>
+          <br />
+          <h2 className="leaderboardTitle" style={{fontSize: "20px"}}>Leaderboard</h2>
+        <div className="leaderboardDiv" >
+        {Object.keys(leaderboard).map((key, j) => 
+          <div key={j}>
+            <p className="leaderboardTitle">{key}</p>
+            {leaderboard[key].map((item, i) => 
+              <p className="leaderboardItem" key={i}>
+                <strong>{item[0]}:</strong> {item[1]}s
+              </p>
+              )}
+          </div>
+        )}
+        </div>
+        </div>
+      )}
     </div>
   )
 }
