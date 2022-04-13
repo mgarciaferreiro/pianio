@@ -3,7 +3,7 @@ import './App.css'
 import WebFont from 'webfontloader'
 import React, { useState, useEffect } from 'react'
 import Constants from './shared/constants'
-import { createGame, joinGame, joinRandomGame, getLeaderboard } from './networking'
+import { createGame, joinGame, joinRandomGame, getLeaderboard, createSoloGame } from './networking'
 import { socket } from './App'
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
@@ -71,6 +71,7 @@ function Home({ name, setName, leaderboard }) {
       },
     })
     filter.loadDictionary()
+    return () => { socket.off(Constants.MSG_TYPES.JOIN_GAME_FAILURE); };
   }, [])
 
   return (
@@ -94,6 +95,24 @@ function Home({ name, setName, leaderboard }) {
               Play
             </button>
           </form>
+          <Dropdown
+            title="Practice Solo"
+            options={[
+              { label: 'Easy', value: Constants.EASY },
+              { label: 'Medium', value: Constants.MEDIUM },
+              { label: 'Hard', value: Constants.HARD },
+            ]}
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            onClick={() => {
+              if (name !== '' && !filter.check(name)) {
+                createSoloGame(name, difficulty)
+              } else { 
+                setName('guest')
+                createSoloGame('guest', difficulty) 
+              }
+            }}
+          />
           <br />
           <br />
         </div>
@@ -101,8 +120,19 @@ function Home({ name, setName, leaderboard }) {
 
       {loggedIn && (
         <div>
+          {/* <Dropdown
+            title="Play Solo"
+            options={[
+              { label: 'Easy', value: Constants.EASY },
+              { label: 'Medium', value: Constants.MEDIUM },
+              { label: 'Hard', value: Constants.HARD },
+            ]}
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            onClick={() => createSoloGame(name, difficulty)}
+          /> */}
           <Dropdown
-            title="Create Room"
+            title="Create a Room"
             options={[
               { label: 'Easy', value: Constants.EASY },
               { label: 'Medium', value: Constants.MEDIUM },
@@ -163,16 +193,30 @@ function Home({ name, setName, leaderboard }) {
           <br />
           <h2 className="leaderboardTitle" style={{fontSize: "20px"}}>Leaderboard</h2>
         <div className="leaderboardDiv" >
-        {Object.keys(leaderboard).map((key, j) => 
-          <div key={j}>
-            <p className="leaderboardTitle">{key}</p>
-            {leaderboard[key].map((item, i) => 
+          <div>
+            <p className="leaderboardTitle">Easy</p>
+            {leaderboard["Easy"].map((item, i) => 
               <p className="leaderboardItem" key={i}>
-                <strong>{item[0]}:</strong> {item[1]}s
+                <strong>{i + 1}. {item[0]}:</strong> {item[1]}s
               </p>
               )}
           </div>
-        )}
+          <div>
+            <p className="leaderboardTitle">Medium</p>
+            {leaderboard["Medium"].map((item, i) => 
+              <p className="leaderboardItem" key={i}>
+                <strong>{i + 1}. {item[0]}:</strong> {item[1]}s
+              </p>
+              )}
+          </div>
+          <div>
+            <p className="leaderboardTitle">Hard</p>
+            {leaderboard["Hard"].map((item, i) => 
+              <p className="leaderboardItem" key={i}>
+                <strong>{i + 1}. {item[0]}:</strong> {item[1]}s
+              </p>
+              )}
+          </div>
         </div>
         </div>
       )}

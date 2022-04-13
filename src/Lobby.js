@@ -59,7 +59,7 @@ function Lobby({gameState, name}) {
         {gameState.host !== name && (
           <div>
             <h3>Waiting for {gameState.host} to start the game</h3>
-              <button className="startGameleaveLobby" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
+              <button className="startGame leaveLobby" onClick={() => clickedLeaveLobby()}>Leave Lobby</button>
           </div>
         )}
   

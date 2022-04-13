@@ -219,6 +219,7 @@ li {
 .startGame {
   margin: 0 auto;
   margin-top: 25px;
+  margin-bottom: 25px;
   display: block;
   background: rgba(156, 133, 25, 0.81);
   height:35px;
@@ -251,7 +252,7 @@ li {
   height:42px;
   margin-left:10px;
   margin-right:10px;
-  width:140px;
+  width:150px;
   border-radius: 3px;
   font-family: Arial;
   font-style: normal;
@@ -259,7 +260,7 @@ li {
   letter-spacing: 0.05em;
   color: white;
   border: none;
-  margin-top:50px
+  margin-top:50px;
 }
 
 .toggleLeaderboard {
@@ -508,6 +509,7 @@ input {
 .dropdown {
   background: rgb(132,114,26);
   border-radius: 3px;
+  width: 115px;
   height: 40px;
   font-family: Arial;
   font-style: normal;
@@ -524,9 +526,11 @@ input {
 
 .arrow {
   width: 20px;
+  float: right;
 }
 
 .flex {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }

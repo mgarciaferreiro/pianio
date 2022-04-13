@@ -1,7 +1,7 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
 import WebFont from 'webfontloader'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import minnie from './gifs/minnie.gif'
 import mickey from './gifs/mickey.gif'
 import donald from './gifs/donald.gif'
@@ -9,9 +9,10 @@ import goofy from './gifs/goofy.gif'
 import tom from './gifs/tom.gif'
 import berlioz from './gifs/berlioz.gif'
 
-import { restartGame } from './networking'
+import { restartGame, leaveLobby } from './networking'
 
 function Victory({ gameState, name }) {
+  let navigate = useNavigate()
   const gifs = {minnie, mickey, donald, goofy, tom, berlioz}
   useEffect(() => {
     WebFont.load({
@@ -20,10 +21,6 @@ function Victory({ gameState, name }) {
       },
     })
   }, [])
-
-  const clickedRestart = () => {
-    restartGame(gameState.gameId)
-  }
 
   return (
     <div className="app">
@@ -47,25 +44,29 @@ function Victory({ gameState, name }) {
           .seconds / 10}
         s
       </p>
-      <div className="leaderboardDiv">
-
-      {gameState.gameHistory[gameState.gameIndex].map((playerUsername, i) => {
-        return (
-          <p className="leaderboardItem" key={i}>
-            {i + 1}. &nbsp;<strong>{playerUsername}:</strong>{' '}
-            {gameState.players[playerUsername].seconds / 10}s
-          </p>
-        )
-      })}
+      <div className="flex">
+      {gameState.gameHistory[gameState.gameIndex].map((name, i) =>
+        <p className="leaderboardItem" key={i}>
+          <strong>{i + 1}. {name}: </strong>{gameState.players[name].seconds / 10}s
+        </p>
+      )}
       </div>
 
       <br />
       <div className="App">
         {gameState.host === name && (
-          <button className="startGame" onClick={() => clickedRestart()}>
-            Return to Lobby</button>
+          <button className="startGame" onClick={() => restartGame(gameState.gameId)}>
+            Restart Game</button>
         )}
       </div>
+      
+      {(gameState.host !== name || Object.keys(gameState.players).length == 1) && (
+      <button className="startGame leaveLobby" onClick={() => {
+        leaveLobby()
+        navigate('/')
+      }}>
+        Leave Game
+      </button>)}
     </div>
   )
 }

@@ -7,6 +7,11 @@ export const createGame = (hostName, numKeys) => {
   socket.emit(Constants.MSG_TYPES.CREATE_GAME_REQUEST, hostName, numKeys);
 }
 
+export const createSoloGame = (hostName, numKeys) => {
+  console.log('Creating solo game request ' + hostName + socket.id);
+  socket.emit(Constants.MSG_TYPES.CREATE_SOLO_GAME_REQUEST, hostName, numKeys);
+}
+
 export const joinGame = (username, gameId) => {
   console.log('Join game request ' + gameId + username + socket.id);
   socket.emit(Constants.MSG_TYPES.JOIN_GAME_REQUEST, username, gameId);

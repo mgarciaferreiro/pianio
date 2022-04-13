@@ -11,20 +11,9 @@ const images = {minnie, mickey, donald, goofy, tom, berlioz}
 
 function Player({player}) {
 
-    useEffect(() => {
-        WebFont.load({
-          google: {
-            families: ['Abril Fatface', 'GFS Didot', 'Antic Didone'],
-          },
-        })
-    }, [])
-
     return (
         <div>
             <img className="profileSidePic" src={images[player.character]} alt="profile picture" />
-            {/* <h4 className="playerCount" style={{ fontFamily: 'Abril Fatface' }}>
-              {player.username}
-            </h4> */}
         </div>
     )
 

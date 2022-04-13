@@ -16,7 +16,9 @@ io.on('connection', socket => {
   });
 
   socket.on(Constants.MSG_TYPES.CREATE_GAME_REQUEST, (hostName, numKeys) => 
-    createGame(hostName, socket, true, numKeys));
+    createGame(hostName, socket, true, numKeys, false));
+  socket.on(Constants.MSG_TYPES.CREATE_SOLO_GAME_REQUEST, (hostName, numKeys) => 
+    createGame(hostName, socket, true, numKeys, true));
   socket.on('disconnect', () => 
     onDisconnect(socket));
   socket.on(Constants.MSG_TYPES.DISCONNECTED, () => 
@@ -77,7 +79,7 @@ function generateGameId() {
     return result;
   }
 
-function createGame(hostName, socket, isPrivate, numKeys) {
+function createGame(hostName, socket, isPrivate, numKeys, isSolo) {
   console.log('Creating game ' + hostName)
 
   gameId = generateGameId()
@@ -94,7 +96,13 @@ function createGame(hostName, socket, isPrivate, numKeys) {
 
   console.log(hostName + ' created game ' + gameId);
   console.log(game.createGameWithoutSocket())
-  socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket(), game.song); //emit to client
+  //emit to client
+  if (isSolo) {
+    socket.emit(Constants.MSG_TYPES.CREATE_SOLO_GAME_SUCCESS, game.createGameWithoutSocket(), game.song);
+  } else {
+    socket.emit(Constants.MSG_TYPES.CREATE_GAME_SUCCESS, game.createGameWithoutSocket(), game.song);
+  }
+  
 }
 
 function joinGame(username, gameId, socket) {
@@ -139,7 +147,7 @@ function joinRandomGame(username, socket, difficulty) {
       return
     }
   }
-  createGame(username, socket, false, difficulty)
+  createGame(username, socket, false, difficulty, false)
 }
 
 function restartGame(gameId, socket) {

@@ -21,7 +21,6 @@ function App() {
   const [leaderboard, setLeaderboard] = useState('')
 
   useEffect(() => {
-    // getLeaderboard()
     socket.on('connect', () => {
       setIsConnected(true)
     })
@@ -35,6 +34,13 @@ function App() {
       setGameState(game)
       setSong(Array.from(song))
       navigate('/Lobby')
+    })
+    socket.on(Constants.MSG_TYPES.CREATE_SOLO_GAME_SUCCESS, (game, song) => {
+      console.log('Created solo game with ID ' + game.gameId)
+      console.log(game)
+      setGameState(game)
+      setSong(Array.from(song))
+      navigate('/Game')
     })
     socket.on(Constants.MSG_TYPES.PLAYER_JOINED_SESSION, game => {
       console.log('Player joined game ' + game.gameId)
@@ -64,7 +70,7 @@ function App() {
     socket.on(Constants.MSG_TYPES.RESTART_GAME_RESPONSE, (game) => {
       console.log("received restart game response from server")
       console.log(game)
-      navigate('/Lobby')
+      navigate('/Game')
       setGameState(game)
     })
     socket.on(Constants.MSG_TYPES.LEADERBOARD_RESPONSE, leaderboard => {
@@ -77,6 +83,7 @@ function App() {
       socket.off('disconnect');
       socket.off(Constants.MSG_TYPES.DISCONNECTED)
       socket.off(Constants.MSG_TYPES.CREATE_GAME_SUCCESS)
+      socket.off(Constants.MSG_TYPES.CREATE_SOLO_GAME_SUCCESS)
       socket.off(Constants.MSG_TYPES.PLAYER_JOINED_SESSION)
       socket.off(Constants.MSG_TYPES.JOIN_GAME_SUCCESS)
       socket.off(Constants.MSG_TYPES.GAME_UPDATE_RESPONSE)

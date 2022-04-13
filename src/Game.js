@@ -65,7 +65,7 @@ function Game({gameState, song, name}) {
         clearInterval(interval);
       }
       return () => clearInterval(interval);
-    }, [isActive, seconds]);
+    }, []);
   
     const handleKeyPress = (event) => {
         const tilePressed = gameState.keys.indexOf(event.key.toUpperCase())
@@ -138,9 +138,9 @@ function Game({gameState, song, name}) {
     let navigate = useNavigate();
 
     useEffect(() => {
-      if(Session.get("Name") === undefined) {
-        navigate('/')
-      }
+      // if(Session.get("Name") === undefined) {
+      //   navigate('/')
+      // }
         document.addEventListener("keydown", handleKeyPress)
         return () => {
           document.removeEventListener("keydown", handleKeyPress)
