@@ -108,8 +108,9 @@ function Home({ name, setName, leaderboard }) {
               if (name !== '' && !filter.check(name)) {
                 createSoloGame(name, difficulty)
               } else { 
-                setName('guest')
-                createSoloGame('guest', difficulty) 
+                setErrorMessage("Please enter a name!")
+                // setName('guest')
+                // createSoloGame('guest', difficulty) 
               }
             }}
           />
